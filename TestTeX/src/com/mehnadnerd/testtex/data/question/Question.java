@@ -49,15 +49,17 @@ public class Question implements SaveFormatable, TeXFormatable {
     @Override
     public String toTeXFormat() {
         StringBuffer toRet = new StringBuffer();
-        toRet.append("\\question \n \\points");
+        toRet.append("\\question\n\\points ");
         toRet.append(pointval);
         toRet.append("\n");
         toRet.append(questiontext);
-        toRet.append("\n");
+        toRet.append("\n\\begin{choices}\n");
+
         //main choice format processing
         for (Choice c : choices) {
             toRet.append(c.toTeXFormat());
         }
+        toRet.append("\\end{choices}\n");
 
         return toRet.toString();
     }

@@ -11,6 +11,26 @@ public class Choice implements SaveFormatable, TeXFormatable {
 	public Choice() {
 		
 	}
+
+	public Choice(String ctext) {
+		this(ctext, "", false);
+	}
+
+	public Choice(String ctext, boolean isCorrect) {
+		this(ctext, "", isCorrect);
+	}
+
+	public void setChoiceText(String s) {
+		this.ctext = s;
+	}
+
+	public void setExplanation(String s) {
+		this.explanation = s;
+	}
+
+	public void setCorrect(boolean b) {
+		this.isCorrect = isCorrect;
+	}
 	
 	public Choice(String ctext, String explanation, boolean isCorrect) {
 		this.ctext=ctext;
@@ -21,7 +41,7 @@ public class Choice implements SaveFormatable, TeXFormatable {
 	@Override
 	public String toTeXFormat() {
 		StringBuffer toRet=new StringBuffer();
-		toRet.append("\\choice\n");
+		toRet.append("\\choice ");
 		toRet.append(ctext);
 		toRet.append("\n");
 		return toRet.toString();
