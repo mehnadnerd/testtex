@@ -1,6 +1,8 @@
 package com.mehnadnerd.testtex.data;
 
-public interface TeXFormatable {
+import java.io.Serializable;
+
+public interface TeXFormatable extends Serializable {
 	/**
 	 * 
 	 * @return The object formatted with the LaTeX exam package

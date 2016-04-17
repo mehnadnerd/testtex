@@ -1,9 +1,12 @@
 package com.mehnadnerd.testtex.data.choice;
 
-import com.mehnadnerd.testtex.data.SaveFormatable;
+import com.mehnadnerd.testtex.data.DisplayFormatable;
 import com.mehnadnerd.testtex.data.TeXFormatable;
+import com.mehnadnerd.testtex.util.Strings;
+import com.mehnadnerd.testtex.util.TestTeXConstants;
+import javafx.scene.control.TreeItem;
 
-public class Choice implements SaveFormatable, TeXFormatable {
+public class Choice implements DisplayFormatable, TeXFormatable {
 	protected String ctext;
 	protected String explanation;
 	protected boolean isCorrect;
@@ -56,4 +59,13 @@ public class Choice implements SaveFormatable, TeXFormatable {
 		return isCorrect;
 	}
 
+	@Override
+	public TreeItem toDisplayFormat() {
+		return new TreeItem<>(this);
+	}
+
+	@Override
+	public String toString() {
+		return Strings.trim(ctext, TestTeXConstants.maxDisplayChars);
+	}
 }

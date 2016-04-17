@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<Pane maxHeight="570" maxWidth="300" minHeight="570" minWidth="300" prefHeight="570" prefWidth="300"
+      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label layoutX="80.0" layoutY="30.0" text="This object has no details." textAlignment="CENTER"/>
+    </children>
+</Pane>

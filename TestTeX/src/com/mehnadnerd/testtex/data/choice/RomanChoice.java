@@ -45,4 +45,26 @@ public class RomanChoice extends Choice {
         toRet.append(".\n");
         return toRet.toString();
     }
+
+    @Override
+    public String toString() {
+        StringBuffer toRet = new StringBuffer();
+        switch (values.size()) {
+            case 1:
+                toRet.append(values.get(0).toTeXFormat());
+                break;
+            case 2:
+                toRet.append(values.get(0).toTeXFormat());
+                toRet.append(" and ");
+                toRet.append(values.get(1).toTeXFormat());
+                break;
+            case 3:
+                toRet.append(values.get(0).toTeXFormat());
+                toRet.append(", ");
+                toRet.append(values.get(1).toTeXFormat());
+                toRet.append(", and ");
+                toRet.append(values.get(2).toTeXFormat());
+        }
+        return toRet.toString();
+    }
 }

@@ -1,6 +1,8 @@
 package com.mehnadnerd.testtex.data.question;
 
 import com.mehnadnerd.testtex.data.choice.Choice;
+import com.mehnadnerd.testtex.gui.ChoiceContainerTreeItem;
+import javafx.scene.control.TreeItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,5 +36,16 @@ public class RomanQuestion extends Question {
 		toRet.append("\\end{choices}\n\n");
 
 		return toRet.toString();
+	}
+
+	@Override
+	public TreeItem toDisplayFormat() {
+		TreeItem toRet = super.toDisplayFormat();
+		TreeItem romanOptions = new ChoiceContainerTreeItem("Roman Options");
+		for (Choice c : romanchoices) {
+			romanOptions.getChildren().add(c.toDisplayFormat());
+		}
+		toRet.getChildren().add(romanOptions);
+		return toRet;
 	}
 }

@@ -1,7 +1,9 @@
 package com.mehnadnerd.testtex.data.exam;
 
+import com.mehnadnerd.testtex.data.DisplayFormatable;
 import com.mehnadnerd.testtex.data.TeXFormatable;
 import com.mehnadnerd.testtex.data.question.Question;
+import javafx.scene.control.TreeItem;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ import java.util.List;
 /**
  * Created by mehnadnerd on 2016-04-16.
  */
-public class Exam implements TeXFormatable {
+public class Exam implements TeXFormatable, DisplayFormatable {
     private List<Question> questions = new ArrayList<Question>();
     private String examTitle;
     private String classTitle;
@@ -70,5 +72,19 @@ public class Exam implements TeXFormatable {
         toRet.append("\\end{document}");
 
         return toRet.toString();
+    }
+
+    @Override
+    public TreeItem toDisplayFormat() {
+        TreeItem toRet = new TreeItem<>(this);
+        for (Question q : questions) {
+            toRet.getChildren().add(q.toDisplayFormat());
+        }
+        return toRet;
+    }
+
+    @Override
+    public String toString() {
+        return this.examTitle;
     }
 }

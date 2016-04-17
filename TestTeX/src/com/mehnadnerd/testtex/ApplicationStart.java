@@ -8,19 +8,22 @@ import javafx.stage.Stage;
 
 public class ApplicationStart extends Application {
 
-	@Override
-	public void start(Stage stage) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("gui/main.fxml"));
+    @Override
+    public void start(Stage stage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("gui/main.fxml"));
+        Scene scene = new Scene(root, 1000, 600);
 
-		Scene scene = new Scene(root, 1000, 600);
+        stage.setTitle("TestTeX");
+        stage.setScene(scene);
+        stage.show();
+    }
 
-		stage.setTitle("TestTeX");
-		stage.setScene(scene);
-		stage.show();
-	}
-	//Design Thingies
-	/* Have external reference as own class, so no need for metachoices-implement with ChociePlacementRequirements
-	 * 
+    public static void main(String[] args) {
+        Application.launch(ApplicationStart.class, args);
+    }
+    //Design Thingies
+    /* Have external reference as own class, so no need for metachoices-implement with ChociePlacementRequirements
+     *
 	 * 
 	 * 
 	 * 

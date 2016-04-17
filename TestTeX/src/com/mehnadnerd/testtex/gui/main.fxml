@@ -15,7 +15,13 @@
                         <MenuItem mnemonicParsing="false" text="Open" fx:id="openButton"/>
                         <MenuItem mnemonicParsing="false" text="Save" fx:id="saveButton"/>
                         <MenuItem mnemonicParsing="false" text="Save as" fx:id="saveAsButton"/>
+                        <MenuItem mnemonicParsing="false" text="Export" fx:id="exportButton"/>
                         <MenuItem mnemonicParsing="false" text="Close" fx:id="closeButton"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Add" fx:id="addButton"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
@@ -32,7 +38,7 @@
                         <TreeView prefHeight="570" prefWidth="700" fx:id="treeView"/>
                     </children>
                 </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="570" prefWidth="300"/>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="570" prefWidth="300" fx:id="detailPane"/>
             </items>
         </SplitPane>
     </children>
