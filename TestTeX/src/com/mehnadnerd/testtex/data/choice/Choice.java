@@ -29,7 +29,7 @@ public class Choice implements SaveFormatable, TeXFormatable {
 	}
 
 	public void setCorrect(boolean b) {
-		this.isCorrect = isCorrect;
+		this.isCorrect = b;
 	}
 	
 	public Choice(String ctext, String explanation, boolean isCorrect) {
@@ -41,7 +41,12 @@ public class Choice implements SaveFormatable, TeXFormatable {
 	@Override
 	public String toTeXFormat() {
 		StringBuffer toRet=new StringBuffer();
-		toRet.append("\\choice ");
+		if (isCorrect) {
+			toRet.append("\\CorrectChoice ");
+		} else {
+			toRet.append("\\choice ");
+		}
+
 		toRet.append(ctext);
 		toRet.append("\n");
 		return toRet.toString();

@@ -18,6 +18,6 @@ public class RomanChoiceXref extends Xref {
 
     @Override
     public String toTeXFormat() {
-        return Maths.numToNumeral(encapsulatingQuestion.getRomanChoiceNum(reference) + 1);
+        return Maths.numToNumeral(encapsulatingQuestion.getRomanOptionNum(reference) + 1);
     }
 }

@@ -20,7 +20,11 @@ public class RomanChoice extends Choice {
     @Override
     public String toTeXFormat() {
         StringBuffer toRet = new StringBuffer();
-        toRet.append("\\choice ");
+        if (isCorrect) {
+            toRet.append("\\CorrectChoice ");
+        } else {
+            toRet.append("\\choice ");
+        }
         switch (values.size()) {
             case 1:
                 toRet.append(values.get(0).toTeXFormat());

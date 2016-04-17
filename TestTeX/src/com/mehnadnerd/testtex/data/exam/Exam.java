@@ -3,6 +3,7 @@ package com.mehnadnerd.testtex.data.exam;
 import com.mehnadnerd.testtex.data.TeXFormatable;
 import com.mehnadnerd.testtex.data.question.Question;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,19 +14,44 @@ public class Exam implements TeXFormatable {
     private List<Question> questions = new ArrayList<Question>();
     private String examTitle;
     private String classTitle;
-    private String testDate;
+    private String testDate = "" + LocalDateTime.now().getYear();
+    private boolean displayAnswers;
+
+    public void setExamTitle(String s) {
+        this.examTitle = s;
+    }
+
+    public void setClassTitle(String s) {
+        this.classTitle = s;
+    }
+
+    public void setTestDate(String s) {
+        this.testDate = s;
+    }
+
+    public void addQuestion(Question q) {
+        questions.add(q);
+    }
+
+    public void setDisplayAnswers(boolean b) {
+        displayAnswers = b;
+    }
 
     @Override
     public String toTeXFormat() {
         StringBuffer toRet = new StringBuffer();
-        toRet.append("\\documentclass[addpoints]{exam}\n");
+        toRet.append("\\documentclass[addpoints");
+        if (displayAnswers) {
+            toRet.append(",answers");
+        }
+        toRet.append("]{exam}\n");
         toRet.append("\\usepackage{enumerate}\n");
         toRet.append("\\usepackage{listings}");
         toRet.append("\n");
         toRet.append("\\title{" + examTitle + "}\n");
         toRet.append("\\date{" + testDate + "}\n");
 
-        toRet.append(" \\pagestyle{headandfoot}\n");
+        toRet.append("\\pagestyle{headandfoot}\n");
         toRet.append("\\firstpageheader{" + classTitle + "}{\\testtitle}{\\testdate}\n");
         toRet.append("\\firstpageheadrule");
         toRet.append("\\runningheader{" + classTitle + "}{\\testtitle \\,Page\thepage\\ of \\numpages}{\\testdate}\n");
@@ -34,7 +60,7 @@ public class Exam implements TeXFormatable {
         toRet.append("\\begin {document}\n");
 
         toRet.append("\\newcommand{\\testtitle} {" + examTitle + "}\n");
-        toRet.append(" \\newcommand{\\testdate} {" + testDate + "}\n");
+        toRet.append("\\newcommand{\\testdate} {" + testDate + "}\n\n");
 
         toRet.append("\\begin{questions}\n");
         for (Question q : questions) {

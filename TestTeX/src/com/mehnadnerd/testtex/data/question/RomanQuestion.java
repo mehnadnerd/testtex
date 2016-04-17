@@ -18,9 +18,9 @@ public class RomanQuestion extends Question {
 	@Override
 	public String toTeXFormat() {
 		StringBuffer toRet = new StringBuffer();
-		toRet.append("\\question \n\\points ");
+		toRet.append("\\question[");
 		toRet.append(pointval);
-		toRet.append("\n");
+		toRet.append("]\n");
 		toRet.append(questiontext);
 		toRet.append("\n\\begin{enumerate}\n");
 		for (Choice c: romanchoices) {
@@ -31,7 +31,7 @@ public class RomanQuestion extends Question {
 		for (Choice c : choices) {
 			toRet.append(c.toTeXFormat());
 		}
-		toRet.append("\\end{choices}\n");
+		toRet.append("\\end{choices}\n\n");
 
 		return toRet.toString();
 	}
