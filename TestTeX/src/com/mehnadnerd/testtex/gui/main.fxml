@@ -19,9 +19,12 @@
                         <MenuItem mnemonicParsing="false" text="Close" fx:id="closeButton"/>
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
+                <Menu mnemonicParsing="false" text="Add">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Add" fx:id="addButton"/>
+                        <MenuItem mnemonicParsing="false" text="Smart Add" fx:id="smartAddButton"/>
+                        <MenuItem mnemonicParsing="false" text="Add Question" fx:id="questionAddButton"/>
+                        <MenuItem mnemonicParsing="false" text="Add Roman Question" fx:id="romanQuestionAddButton"/>
+                        <MenuItem mnemonicParsing="false" text="Add Choice" fx:id="choiceAddButton"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">

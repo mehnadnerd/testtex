@@ -9,4 +9,8 @@ public class ChoiceContainerTreeItem extends TreeItem<Object> {
     public ChoiceContainerTreeItem(String name) {
         super(name);
     }
+
+    public String getNameString() {
+        return super.getValue().toString();
+    }
 }

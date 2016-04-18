@@ -13,9 +13,9 @@ import java.util.List;
 
 public class Question implements
         DisplayFormatable, TeXFormatable {
-    protected String questiontext;
-    protected List<Choice> choices = new ArrayList<Choice>();//will be ordered into the the order for printing
-    protected int pointval;
+    protected String questiontext = "Is this a question?";
+    protected List<Choice> choices = new ArrayList<>();//will be ordered into the the order for printing
+    protected int pointval = 1;
 
     public Question() {
     }

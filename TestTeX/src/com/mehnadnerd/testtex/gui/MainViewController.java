@@ -3,9 +3,13 @@ package com.mehnadnerd.testtex.gui;
 import com.mehnadnerd.testtex.ApplicationStart;
 import com.mehnadnerd.testtex.BackendManager;
 import com.mehnadnerd.testtex.data.choice.Choice;
+import com.mehnadnerd.testtex.data.choice.RomanChoice;
 import com.mehnadnerd.testtex.data.exam.Exam;
 import com.mehnadnerd.testtex.data.question.Question;
 import com.mehnadnerd.testtex.data.question.RomanQuestion;
+import com.mehnadnerd.testtex.gui.detail.ChoiceDetailController;
+import com.mehnadnerd.testtex.gui.detail.ExamDetailController;
+import com.mehnadnerd.testtex.gui.detail.QuestionDetailController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -47,7 +51,7 @@ public class MainViewController implements Initializable {
     @FXML
     private MenuItem aboutButton;
     @FXML
-    private MenuItem addButton;
+    private MenuItem smartAddButton;
 
     @FXML
     private Pane detailPane;
@@ -66,7 +70,7 @@ public class MainViewController implements Initializable {
         closeButton.setAccelerator(new KeyCodeCombination(KeyCode.W, KeyCombination.SHORTCUT_DOWN));
         openButton.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
         exportButton.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
-        addButton.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHORTCUT_DOWN));
+        smartAddButton.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHORTCUT_DOWN));
 
 
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -83,19 +87,41 @@ public class MainViewController implements Initializable {
             }
         });
 
-        addButton.setOnAction(new EventHandler<ActionEvent>() {
+        smartAddButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Attempting to add");
+                //Exam selected->Add question
+                //Question Selected->Add question
+                //Choices Header Selected->Add choice
+                //Choice Selected->Add choice
+                //Roman Options Header Selected->Add choice
+
                 Object o = ((TreeItem) treeView.getSelectionModel().getSelectedItem()).getValue();
-                if (o instanceof Question && !(o instanceof RomanQuestion)) {
-                    System.out.println("Valid place to add");
-                    ((Question) o).addChoice(new Choice("Response"));
-                    forceRefresh();
-                    System.out.println(((Question) o).toTeXFormat());
+                System.out.println("Attempting to add from a " + o.getClass().getCanonicalName());
+                if (o instanceof Exam) {
+                    Question toAdd = new Question();
+                    //Add Question both to exam and to view-stops from having to regen tree
+                    ((Exam) o).addQuestion(toAdd);
+                    treeView.getRoot().getChildren().add(toAdd.toDisplayFormat());
+                } else if (o instanceof Question && !(o instanceof RomanQuestion)) {
+                    Question toAdd = new Question();
+                    ((Exam) treeView.getRoot().getValue()).addQuestion(toAdd);
+                    treeView.getRoot().getChildren().add(toAdd.toDisplayFormat());
+                } else if (o instanceof String &&
+                        ((String) o).equalsIgnoreCase("Choices")) {
+                    Choice toAdd = new Choice("Response");
+
+                    ((Question) ((TreeItem) treeView.getSelectionModel().getSelectedItem()).getParent().getValue()).addChoice(toAdd);
+                    ((TreeItem) treeView.getSelectionModel().getSelectedItem()).getChildren().add(toAdd.toDisplayFormat());
+
+                } else if (o instanceof Choice) {
+                    Choice toAdd = new Choice("Response");
+                    ((com.mehnadnerd.testtex.data.question.Question) ((TreeItem) treeView.getSelectionModel().getSelectedItem()).getParent().getParent().getValue()).addChoice(toAdd);
+                    ((TreeItem) treeView.getSelectionModel().getSelectedItem()).getParent().getChildren().add(toAdd.toDisplayFormat());
                 } else {
                     System.out.println(o.getClass());
                 }
+                forceRefresh();
             }
         });
 
@@ -104,60 +130,76 @@ public class MainViewController implements Initializable {
 
     private void forceRefresh() {
         treeView.refresh();
-        treeView.setRoot(BackendManager.getDisplayTree());
-        treeView.refresh();
     }
 
     private class DetailPaneListener implements EventHandler<ActionEvent>, ChangeListener<TreeItem<Object>> {
-        private Pane choiceDetail;
-        private Pane examDetail;
-        private Pane questionDetail;
-        private Pane noneDetail;
+        private ChoiceDetailController choiceDetail;
+        private ExamDetailController examDetail;
+        private QuestionDetailController questionDetail;
+
+        private Pane choiceDetailPane;
+        private Pane examDetailPane;
+        private Pane questionDetailPane;
+        private Pane noneDetailPane;
 
         public DetailPaneListener() {
             try {
-                choiceDetail = FXMLLoader.load(ApplicationStart.class.getResource("gui/detailChoice.fxml"));
-                examDetail = FXMLLoader.load(ApplicationStart.class.getResource("gui/detailExam.fxml"));
-                questionDetail = FXMLLoader.load(ApplicationStart.class.getResource("gui/detailQuestion.fxml"));
-                noneDetail = FXMLLoader.load(ApplicationStart.class.getResource("gui/detailNone.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(ApplicationStart.class.getResource("gui/detail/detailChoice.fxml"));
+                choiceDetailPane = fxmlLoader.load();
+                choiceDetail = fxmlLoader.getController();
+                fxmlLoader = new FXMLLoader(ApplicationStart.class.getResource("gui/detail/detailExam.fxml"));
+                examDetailPane = fxmlLoader.load();
+                examDetail = fxmlLoader.getController();
+                fxmlLoader = new FXMLLoader(ApplicationStart.class.getResource("gui/detail/detailQuestion.fxml"));
+                questionDetailPane = fxmlLoader.load();
+                questionDetail = fxmlLoader.load();
+                fxmlLoader = new FXMLLoader(ApplicationStart.class.getResource("gui/detail/detailNone.fxml"));
+                noneDetailPane = fxmlLoader.load();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            detailPane.getChildren().add(examDetail);
+            detailPane.getChildren().add(examDetailPane);
+            ((TextField) examDetailPane.getChildren().get(1)).setText(((Exam) treeView.getRoot().getValue()).toString());
             treeView.getSelectionModel().select(treeView.getRoot());
         }
 
         @Override
         public void changed(ObservableValue<? extends TreeItem<Object>> observable, TreeItem<Object> oldValue, TreeItem<Object> newValue) {
             //use old values to record changes
-            if (oldValue.getValue() instanceof Choice) {
-
-                Choice c = ((Choice) oldValue.getValue());
-                //System.out.println("Switching from " + c);
-                //System.out.println(choiceDetail.getChildren().get(1));
-                //System.out.println(((TextField) choiceDetail.getChildren().get(1)).getText());
-                c.setChoiceText(((TextField) choiceDetail.getChildren().get(1)).getText());
-                treeView.refresh();
-                //System.out.println("Now is " + c);
-            } else if (oldValue.getValue() instanceof Exam) {
-                detailPane.getChildren().set(0, examDetail);
-            } else if (oldValue.getValue() instanceof Question && !(oldValue.getValue() instanceof RomanQuestion)) {
-                detailPane.getChildren().set(0, questionDetail);
-            } else {
-                detailPane.getChildren().set(0, noneDetail);
+            if (oldValue != null) {
+                if (oldValue.getValue() instanceof Choice && !(newValue.getValue() instanceof RomanChoice)) {
+                    Choice c = ((Choice) oldValue.getValue());
+                    c.setChoiceText(((TextField) choiceDetailPane.getChildren().get(1)).getText());
+                    treeView.refresh();
+                } else if (oldValue.getValue() instanceof Exam) {
+                    Exam e = (Exam) oldValue.getValue();
+                    e.setExamTitle(((TextField) examDetailPane.getChildren().get(1)).getText());
+                } else if (oldValue.getValue() instanceof Question && !(oldValue.getValue() instanceof RomanQuestion)) {
+                    Question q = (Question) oldValue.getValue();
+                    q.setQuestiontext(((TextField) questionDetailPane.getChildren().get(1)).getText());
+                } else {
+                }
             }
-
-            //change detailPane for new value
-            if (newValue.getValue() instanceof Choice) {
-                detailPane.getChildren().set(0, choiceDetail);
-                ((TextField) choiceDetail.getChildren().get(1)).setText(((Choice) newValue.getValue()).toString());
-            } else if (newValue.getValue() instanceof Exam) {
-                detailPane.getChildren().set(0, examDetail);
-            } else if (newValue.getValue() instanceof Question && !(newValue.getValue() instanceof RomanQuestion)) {
-                detailPane.getChildren().set(0, questionDetail);
+            if (newValue != null) {
+                //change detailPane for new value
+                if (newValue.getValue() instanceof Choice && !(newValue.getValue() instanceof RomanChoice)) {
+                    detailPane.getChildren().set(0, choiceDetailPane);
+                    ((TextField) choiceDetailPane.getChildren().get(1)).setText(((Choice) newValue.getValue()).toString());
+                } else if (newValue.getValue() instanceof Exam) {
+                    detailPane.getChildren().set(0, examDetailPane);
+                    ((TextField) examDetailPane.getChildren().get(1)).setText(((Exam) newValue.getValue()).toString());
+                } else if (newValue.getValue() instanceof Question && !(newValue.getValue() instanceof RomanQuestion)) {
+                    detailPane.getChildren().set(0, questionDetailPane);
+                    ((TextField) questionDetailPane.getChildren().get(1)).setText(((Question) newValue.getValue()).toString());
+                } else {
+                    detailPane.getChildren().set(0, noneDetailPane);
+                }
             } else {
-                detailPane.getChildren().set(0, noneDetail);
+                detailPane.getChildren().set(0, noneDetailPane);
             }
+            forceRefresh();
+
+
         }
 
         @Override

@@ -3,17 +3,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.Pane?>
 <Pane maxHeight="570" maxWidth="300" minHeight="570" minWidth="300" prefHeight="570" prefWidth="300"
-      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.mehnadnerd.testtex.gui.detail.ChoiceDetailController">
     <children>
         <Label layoutX="150.0" layoutY="30.0" text="Choice"/>
 
-        <TextField layoutX="123.0" layoutY="55.0"/>
+        <TextField layoutX="123.0" layoutY="55.0" fx:id="ChoiceText"/>
         <Label layoutX="14.0" layoutY="60.0" text="Text"/>
 
         <TextField layoutX="123.0" layoutY="85.0"/>
-        <Label layoutX="14.0" layoutY="90.0" text="Explanation"/>
+        <Label layoutX="14.0" layoutY="90.0" text="Explanation" fx:id="ChoiceExplanation"/>
 
-        <Label layoutX="14.0" layoutY="120.0" text="Correct?"/>
+        <Label layoutX="14.0" layoutY="120.0" text="Correct?" fx:id="ChoiceCorrect"/>
         <CheckBox layoutX="123.0" layoutY="115.0"/>
     </children>
 </Pane>

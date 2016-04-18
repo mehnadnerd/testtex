@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class Exam implements TeXFormatable, DisplayFormatable {
     private List<Question> questions = new ArrayList<Question>();
-    private String examTitle;
-    private String classTitle;
+    private String examTitle = "Turtwig Exam";
+    private String classTitle = "Turtwig Class";
     private String testDate = "" + LocalDateTime.now().getYear();
     private boolean displayAnswers;
 
