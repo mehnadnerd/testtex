@@ -194,7 +194,7 @@ public class MainViewController implements Initializable {
                 e.printStackTrace();
             }
             detailPane.getChildren().add(examDetailPane);
-            ((TextField) examDetailPane.getChildren().get(1)).setText(((Exam) treeView.getRoot().getValue()).toString());
+            ((TextField) examDetailPane.getChildren().get(1)).setText(treeView.getRoot().getValue().toString());
             treeView.getSelectionModel().select(treeView.getRoot());
         }
 
@@ -219,13 +219,13 @@ public class MainViewController implements Initializable {
                 //change detailPane for new value
                 if (newValue.getValue().getClass().equals(Choice.class)) {
                     detailPane.getChildren().set(0, choiceDetailPane);
-                    ((TextField) choiceDetailPane.getChildren().get(1)).setText(((Choice) newValue.getValue()).toString());
+                    ((TextField) choiceDetailPane.getChildren().get(1)).setText(newValue.getValue().toString());
                 } else if (newValue.getValue().getClass().equals(Exam.class)) {
                     detailPane.getChildren().set(0, examDetailPane);
-                    ((TextField) examDetailPane.getChildren().get(1)).setText(((Exam) newValue.getValue()).toString());
+                    ((TextField) examDetailPane.getChildren().get(1)).setText(newValue.getValue().toString());
                 } else if (newValue.getValue().getClass().equals(Question.class)) {
                     detailPane.getChildren().set(0, questionDetailPane);
-                    ((TextField) questionDetailPane.getChildren().get(1)).setText(((Question) newValue.getValue()).toString());
+                    ((TextField) questionDetailPane.getChildren().get(1)).setText(newValue.getValue().toString());
                 } else {
                     detailPane.getChildren().set(0, noneDetailPane);
                 }

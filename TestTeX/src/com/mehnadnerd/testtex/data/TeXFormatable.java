@@ -7,7 +7,7 @@ public interface TeXFormatable extends Serializable {
 	 * 
 	 * @return The object formatted with the LaTeX exam package
 	 */
-	public String toTeXFormat();
+	String toTeXFormat();
 	
 	/**
 	 * 

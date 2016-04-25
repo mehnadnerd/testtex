@@ -5,8 +5,8 @@ import java.util.List;
 /**
  * Created by mehnadnerd on 2016-04-16.
  */
-public class Arranger {
-    public static List arrange(List toArrange, List<PlacementRequirement> requirements) {
+public class Arranger<T> {
+    public List arrange(List toArrange, List<PlacementRequirement> requirements) {
         if (checkArrange(toArrange, requirements)) {
             return toArrange;
         } else {
@@ -16,7 +16,7 @@ public class Arranger {
         return toArrange;
     }
 
-    private static boolean checkArrange(List check, List<PlacementRequirement> requirements) {
+    private boolean checkArrange(List<T> check, List<PlacementRequirement> requirements) {
         for (int i = 0; i < check.size(); i++) {
             if (!requirements.get(i).isSatisfied(check, i)) {
                 return false;
