@@ -2,8 +2,8 @@ package com.mehnadnerd.testtex.data.choice;
 
 import com.mehnadnerd.testtex.data.DisplayFormatable;
 import com.mehnadnerd.testtex.data.TeXFormatable;
-import com.mehnadnerd.testtex.util.Strings;
 import com.mehnadnerd.testtex.util.TestTeXConstants;
+import com.mehnadnerd.testtex.util.TurtleStringModifiy;
 import javafx.scene.control.TreeItem;
 
 public class Choice implements DisplayFormatable, TeXFormatable {
@@ -66,6 +66,6 @@ public class Choice implements DisplayFormatable, TeXFormatable {
 
 	@Override
 	public String toString() {
-		return Strings.trim(ctext, TestTeXConstants.maxDisplayChars);
+		return TurtleStringModifiy.trim(ctext, TestTeXConstants.maxDisplayChars);
 	}
 }

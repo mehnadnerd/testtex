@@ -4,8 +4,8 @@ import com.mehnadnerd.testtex.data.DisplayFormatable;
 import com.mehnadnerd.testtex.data.TeXFormatable;
 import com.mehnadnerd.testtex.data.choice.Choice;
 import com.mehnadnerd.testtex.gui.ChoiceContainerTreeItem;
-import com.mehnadnerd.testtex.util.Strings;
 import com.mehnadnerd.testtex.util.TestTeXConstants;
+import com.mehnadnerd.testtex.util.TurtleStringModifiy;
 import javafx.scene.control.TreeItem;
 
 import java.util.ArrayList;
@@ -84,6 +84,6 @@ public class Question implements
 
     @Override
     public String toString() {
-        return Strings.trim(questiontext, TestTeXConstants.maxDisplayChars);
+        return TurtleStringModifiy.trim(questiontext, TestTeXConstants.maxDisplayChars);
     }
 }
