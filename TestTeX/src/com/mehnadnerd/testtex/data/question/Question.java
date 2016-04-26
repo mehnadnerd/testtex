@@ -33,12 +33,20 @@ public class Question implements
         choices.remove(c);
     }
 
-    public void setQuestiontext(String s) {
+    public void setQuestionText(String s) {
         questiontext = s;
     }
 
-    public void setPointval(int i) {
+    public String getQuestionText() {
+        return questiontext;
+    }
+
+    public void setPointVal(int i) {
         pointval = i;
+    }
+
+    public int getPointVal() {
+        return pointval;
     }
 
     /**
@@ -73,7 +81,7 @@ public class Question implements
     @Override
     public TreeItem toDisplayFormat() {
         TreeItem toRet = new TreeItem<>(this);
-        TreeItem choiceHolder = new ChoiceContainerTreeItem("Choices");
+        TreeItem choiceHolder = new ChoiceContainerTreeItem(TestTeXConstants.CHOICECONTAINERTREEITEMTEXT);
         toRet.getChildren().add(choiceHolder);
         for (Choice c : choices) {
             choiceHolder.getChildren().add(c.toDisplayFormat());

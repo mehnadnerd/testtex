@@ -12,8 +12,8 @@ public class RomanQuestionTest {
     @Test
     public void testToTeXFormat() throws Exception {
         RomanQuestion q = new RomanQuestion();
-        q.setQuestiontext("Which of the following is(are) true of Turtwig?");
-        q.setPointval(387);
+        q.setQuestionText("Which of the following is(are) true of Turtwig?");
+        q.setPointVal(387);
         Choice ci = new Choice("They are the best!");
         Choice cii = new Choice("They are cute.");
         Choice ciii = new Choice("They are stupid.");

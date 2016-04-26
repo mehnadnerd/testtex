@@ -23,12 +23,24 @@ public class Exam implements TeXFormatable, DisplayFormatable {
         this.examTitle = s;
     }
 
+    public String getExamTitle() {
+        return this.examTitle;
+    }
+
     public void setClassTitle(String s) {
         this.classTitle = s;
     }
 
-    public void setTestDate(String s) {
+    public String getClassTitle() {
+        return this.classTitle;
+    }
+
+    public void setExamDate(String s) {
         this.testDate = s;
+    }
+
+    public String getExamDate() {
+        return this.testDate;
     }
 
     public void addQuestion(Question q) {
@@ -37,6 +49,10 @@ public class Exam implements TeXFormatable, DisplayFormatable {
 
     public void setDisplayAnswers(boolean b) {
         displayAnswers = b;
+    }
+
+    public boolean getDisplayAnswers() {
+        return displayAnswers;
     }
 
     @Override
@@ -56,7 +72,7 @@ public class Exam implements TeXFormatable, DisplayFormatable {
         toRet.append("\\pagestyle{headandfoot}\n");
         toRet.append("\\firstpageheader{").append(classTitle).append("}{\\testtitle}{\\testdate}\n");
         toRet.append("\\firstpageheadrule");
-        toRet.append("\\runningheader{").append(classTitle).append("}{\\testtitle \\,Page\thepage\\ of \\numpages}{\\testdate}\n");
+        toRet.append("\\runningheader{").append(classTitle).append("}{\\testtitle \\,Page \\thepage of \\numpages}{\\testdate}\n");
         toRet.append("\\runningheadrule\n");
 
         toRet.append("\\begin {document}\n");

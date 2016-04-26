@@ -1,14 +1,15 @@
 package com.mehnadnerd.testtex.gui;
 
-import com.mehnadnerd.testtex.ApplicationStart;
 import com.mehnadnerd.testtex.BackendManager;
 import com.mehnadnerd.testtex.data.choice.Choice;
+import com.mehnadnerd.testtex.data.choice.RomanChoice;
 import com.mehnadnerd.testtex.data.exam.Exam;
 import com.mehnadnerd.testtex.data.question.Question;
 import com.mehnadnerd.testtex.data.question.RomanQuestion;
 import com.mehnadnerd.testtex.gui.detail.ChoiceDetailController;
 import com.mehnadnerd.testtex.gui.detail.ExamDetailController;
 import com.mehnadnerd.testtex.gui.detail.QuestionDetailController;
+import com.mehnadnerd.testtex.util.TestTeXConstants;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -30,6 +31,7 @@ import java.util.ResourceBundle;
  * Created by mehnadnerd on 2016-04-17.
  */
 public class MainViewController implements Initializable {
+
     private DetailPaneListener paneListener;
 
     @FXML
@@ -58,6 +60,9 @@ public class MainViewController implements Initializable {
     private MenuItem romanQuestionAddButton;
     @FXML
     private MenuItem choiceAddButton;
+
+    @FXML
+    public MenuItem refreshButton;
 
     @FXML
     private Pane detailPane;
@@ -93,6 +98,7 @@ public class MainViewController implements Initializable {
             }
         });
 
+        //TODO: Fix adding RomanChoices
         smartAddButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -150,17 +156,61 @@ public class MainViewController implements Initializable {
         });
 
         choiceAddButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Choice toAdd = new Choice();
-                Object selected = ((TreeItem) treeView.getSelectionModel().getSelectedItem()).getValue();
-                if (selected.getClass().equals(Question.class)) {
-                    ((Question) selected).addChoice(toAdd);
-                    ((TreeItem) treeView.getSelectionModel().getSelectedItem()).getChildren().add(toAdd.toDisplayFormat());
-                }
-                treeView.getRoot().getChildren().add(toAdd.toDisplayFormat());
-            }
-        });
+                                        @Override
+                                        public void handle(ActionEvent event) {
+                                            Choice toAdd = new Choice();
+                                            TreeItem selected = ((TreeItem) treeView.getSelectionModel().getSelectedItem());
+                                            if (selected.getValue().getClass().equals(Question.class)) {
+                                                ((Question) selected.getValue()).addChoice(toAdd);
+                                                ((TreeItem) (selected).getChildren().get(0))
+                                                        .getChildren().add(toAdd.toDisplayFormat());
+                                            } else if (selected.getClass().equals(ChoiceContainerTreeItem.class)
+                                                    && selected.getValue().equals(TestTeXConstants.CHOICECONTAINERROMANOPTIONTEXT)) {
+                                                //roman option container
+                                                RomanQuestion q = (RomanQuestion) selected.getParent().getValue();
+                                                q.addRomanOption(toAdd);
+                                                selected.getChildren().add(toAdd.toDisplayFormat());
+                                            } else if (selected.getClass().equals(ChoiceContainerTreeItem.class)
+                                                    && selected.getValue().equals(TestTeXConstants.CHOICECONTAINERTREEITEMTEXT)
+                                                    && selected.getParent().getValue().getClass().equals(RomanQuestion.class)) {
+                                                //Container for RomanChoices under a RomanQuestion
+                                                RomanQuestion q = (RomanQuestion) selected.getParent().getValue();
+                                                toAdd = new RomanChoice(q);
+
+                                                q.addChoice(toAdd);
+                                                selected.getChildren().add(toAdd.toDisplayFormat());
+
+                                            } else if (selected.getClass().equals(ChoiceContainerTreeItem.class)
+                                                    && selected.getValue().equals(TestTeXConstants.CHOICECONTAINERTREEITEMTEXT)
+                                                    && selected.getParent().getValue().getClass().equals(Question.class)) {
+                                                //Is a container for Choices under a Question
+                                                ((Question) (selected).getParent().getValue())
+                                                        .addChoice(toAdd);
+                                                (selected).getChildren().add(toAdd.toDisplayFormat());
+
+                                            } else if (selected.getValue().getClass().equals(Choice.class)) {
+                                                //Choice, so add as sibling
+                                                ((Question) selected.getParent().getParent().getValue()).addChoice(toAdd);
+                                                selected.getParent().getChildren().add(toAdd.toDisplayFormat());
+
+                                            } else {
+                                                System.out.println("Failed to add choice to " + selected.getValue().getClass().getCanonicalName());
+                                                //Fail to add anything
+                                                //treeView.getRoot().getChildren().add(toAdd.toDisplayFormat());
+                                            }
+                                        }
+                                    }
+
+        );
+
+        refreshButton.setOnAction(new EventHandler<ActionEvent>() {
+                                      @Override
+                                      public void handle(ActionEvent event) {
+                                          forceRefresh();
+                                      }
+                                  }
+
+        );
     }
 
     private void forceRefresh() {
@@ -179,16 +229,16 @@ public class MainViewController implements Initializable {
 
         public DetailPaneListener() {
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(ApplicationStart.class.getResource("gui/detail/detailChoice.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailChoice.fxml"));
                 choiceDetailPane = fxmlLoader.load();
                 choiceDetail = fxmlLoader.getController();
-                fxmlLoader = new FXMLLoader(ApplicationStart.class.getResource("gui/detail/detailExam.fxml"));
+                fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailExam.fxml"));
                 examDetailPane = fxmlLoader.load();
                 examDetail = fxmlLoader.getController();
-                fxmlLoader = new FXMLLoader(ApplicationStart.class.getResource("gui/detail/detailQuestion.fxml"));
+                fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailQuestion.fxml"));
                 questionDetailPane = fxmlLoader.load();
-                questionDetail = fxmlLoader.load();
-                fxmlLoader = new FXMLLoader(ApplicationStart.class.getResource("gui/detail/detailNone.fxml"));
+                questionDetail = fxmlLoader.getController();
+                fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailNone.fxml"));
                 noneDetailPane = fxmlLoader.load();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -204,14 +254,16 @@ public class MainViewController implements Initializable {
             if (oldValue != null) {
                 if (oldValue.getValue().getClass().equals(Choice.class)) {
                     Choice c = ((Choice) oldValue.getValue());
-                    c.setChoiceText(((TextField) choiceDetailPane.getChildren().get(1)).getText());
+                    c = choiceDetail.writeChoice(c);//n.b. write choice mutates
                     treeView.refresh();
                 } else if (oldValue.getValue().getClass().equals(Exam.class)) {
                     Exam e = (Exam) oldValue.getValue();
-                    e.setExamTitle(((TextField) examDetailPane.getChildren().get(1)).getText());
+                    e = examDetail.writeExam(e);//mutates, so assignment is actually unnessecary
+                    // e.setExamTitle(((TextField) examDetailPane.getChildren().get(1)).getText());
                 } else if (oldValue.getValue().getClass().equals(Question.class)) {
                     Question q = (Question) oldValue.getValue();
-                    q.setQuestiontext(((TextField) questionDetailPane.getChildren().get(1)).getText());
+                    q = questionDetail.writeQuestion(q);
+                    //q.setQuestionText(((TextField) questionDetailPane.getChildren().get(1)).getText());
                 } else {
                 }
             }
@@ -219,13 +271,16 @@ public class MainViewController implements Initializable {
                 //change detailPane for new value
                 if (newValue.getValue().getClass().equals(Choice.class)) {
                     detailPane.getChildren().set(0, choiceDetailPane);
-                    ((TextField) choiceDetailPane.getChildren().get(1)).setText(newValue.getValue().toString());
+                    choiceDetail.loadChoice((Choice) newValue.getValue());
+                    //((TextField) choiceDetailPane.getChildren().get(1)).setText(newValue.getValue().toString());
                 } else if (newValue.getValue().getClass().equals(Exam.class)) {
                     detailPane.getChildren().set(0, examDetailPane);
-                    ((TextField) examDetailPane.getChildren().get(1)).setText(newValue.getValue().toString());
+                    examDetail.loadExam((Exam) newValue.getValue());
+                    //((TextField) examDetailPane.getChildren().get(1)).setText(newValue.getValue().toString());
                 } else if (newValue.getValue().getClass().equals(Question.class)) {
                     detailPane.getChildren().set(0, questionDetailPane);
-                    ((TextField) questionDetailPane.getChildren().get(1)).setText(newValue.getValue().toString());
+                    questionDetail.loadQuestion((Question) newValue.getValue());
+                    //((TextField) questionDetailPane.getChildren().get(1)).setText(newValue.getValue().toString());
                 } else {
                     detailPane.getChildren().set(0, noneDetailPane);
                 }

@@ -9,10 +9,21 @@ import java.util.List;
  * Created by mehnadnerd on 2016-04-16.
  */
 public class RomanChoice extends Choice {
+    private RomanQuestion encaps;
+
+    public RomanChoice(RomanQuestion encaps) {
+        this.encaps = encaps;
+    }
+
     public RomanChoice(RomanQuestion encaps, Choice... refs) {
+        this.encaps = encaps;
         for (Choice c : refs) {
             values.add(new RomanChoiceXref(encaps, c));
         }
+    }
+
+    public void addRef(Choice ref) {
+        values.add(new RomanChoiceXref(encaps, ref));
     }
 
     private List<RomanChoiceXref> values = new ArrayList<RomanChoiceXref>();

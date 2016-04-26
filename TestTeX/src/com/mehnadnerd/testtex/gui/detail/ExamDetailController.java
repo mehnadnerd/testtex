@@ -1,8 +1,9 @@
 package com.mehnadnerd.testtex.gui.detail;
 
+import com.mehnadnerd.testtex.data.exam.Exam;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
@@ -13,16 +14,63 @@ import java.util.ResourceBundle;
  */
 public class ExamDetailController implements Initializable {
     @FXML
-    public Label ExamShowAnswers;
+    private CheckBox ExamShowAnswers;
     @FXML
-    public Label ExamDate;
+    private TextField ExamDate;
     @FXML
-    public Label ExamClass;
+    private TextField ExamClass;
     @FXML
-    public TextField ExamTitle;
+    private TextField ExamTitle;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+    }
+
+    public boolean getExamShowAnswers() {
+        return ExamShowAnswers.isSelected();
+    }
+
+    public String getExamDate() {
+        return ExamDate.getText();
+    }
+
+    public String getExamClass() {
+        return ExamClass.getText();
+    }
+
+    public String getExamTitle() {
+        return ExamTitle.getText();
+    }
+
+    public Exam writeExam(Exam e) {
+        e.setDisplayAnswers(this.getExamShowAnswers());
+        e.setExamDate(this.getExamDate());
+        e.setClassTitle(this.getExamClass());
+        e.setExamTitle(this.getExamTitle());
+        return e;
+    }
+
+    public void loadExam(Exam e) {
+        this.setExamShowAnswers(e.getDisplayAnswers());
+        this.setExamDate(e.getExamDate());
+        this.setExamClass(e.getClassTitle());
+        this.setExamTitle(e.getExamTitle());
+    }
+
+    public void setExamShowAnswers(boolean b) {
+        ExamShowAnswers.setSelected(b);
+    }
+
+    public void setExamDate(String s) {
+        ExamDate.setText(s);
+    }
+
+    public void setExamClass(String s) {
+        ExamClass.setText(s);
+    }
+
+    public void setExamTitle(String s) {
+        ExamTitle.setText(s);
     }
 }
