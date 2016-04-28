@@ -9,6 +9,7 @@ import com.mehnadnerd.testtex.data.question.RomanQuestion;
 import com.mehnadnerd.testtex.gui.detail.ChoiceDetailController;
 import com.mehnadnerd.testtex.gui.detail.ExamDetailController;
 import com.mehnadnerd.testtex.gui.detail.QuestionDetailController;
+import com.mehnadnerd.testtex.gui.detail.RomanChoiceDetailController;
 import com.mehnadnerd.testtex.util.TestTeXConstants;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -221,11 +222,13 @@ public class MainViewController implements Initializable {
         private ChoiceDetailController choiceDetail;
         private ExamDetailController examDetail;
         private QuestionDetailController questionDetail;
+        private RomanChoiceDetailController romanChoiceDetail;
 
         private Pane choiceDetailPane;
         private Pane examDetailPane;
         private Pane questionDetailPane;
         private Pane noneDetailPane;
+        private Pane romanChoiceDetailPane;
 
         public DetailPaneListener() {
             try {
@@ -238,6 +241,9 @@ public class MainViewController implements Initializable {
                 fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailQuestion.fxml"));
                 questionDetailPane = fxmlLoader.load();
                 questionDetail = fxmlLoader.getController();
+                fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailRomanChoice.fxml"));
+                romanChoiceDetailPane = fxmlLoader.load();
+                romanChoiceDetail = fxmlLoader.getController();
                 fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailNone.fxml"));
                 noneDetailPane = fxmlLoader.load();
             } catch (IOException e) {
@@ -260,11 +266,14 @@ public class MainViewController implements Initializable {
                     Exam e = (Exam) oldValue.getValue();
                     e = examDetail.writeExam(e);//mutates, so assignment is actually unnessecary
                     // e.setExamTitle(((TextField) examDetailPane.getChildren().get(1)).getText());
-                } else if (oldValue.getValue().getClass().equals(Question.class)) {
+                } else if (oldValue.getValue().getClass().equals(Question.class)
+                        || oldValue.getValue().getClass().equals(RomanQuestion.class)) {
                     Question q = (Question) oldValue.getValue();
                     q = questionDetail.writeQuestion(q);
                     //q.setQuestionText(((TextField) questionDetailPane.getChildren().get(1)).getText());
-                } else {
+                } else if (oldValue.getValue().getClass().equals(RomanChoice.class)) {
+                    RomanChoice c = (RomanChoice) oldValue.getValue();
+                    c = romanChoiceDetail.writeRomanChoice(c);
                 }
             }
             if (newValue != null) {
@@ -277,10 +286,14 @@ public class MainViewController implements Initializable {
                     detailPane.getChildren().set(0, examDetailPane);
                     examDetail.loadExam((Exam) newValue.getValue());
                     //((TextField) examDetailPane.getChildren().get(1)).setText(newValue.getValue().toString());
-                } else if (newValue.getValue().getClass().equals(Question.class)) {
+                } else if (newValue.getValue().getClass().equals(Question.class)
+                        || newValue.getValue().getClass().equals(RomanQuestion.class)) {
                     detailPane.getChildren().set(0, questionDetailPane);
                     questionDetail.loadQuestion((Question) newValue.getValue());
                     //((TextField) questionDetailPane.getChildren().get(1)).setText(newValue.getValue().toString());
+                } else if (newValue.getValue().getClass().equals(RomanChoice.class)) {
+                    detailPane.getChildren().set(0, romanChoiceDetailPane);
+                    romanChoiceDetail.loadRomanChoice((RomanChoice) newValue.getValue());
                 } else {
                     detailPane.getChildren().set(0, noneDetailPane);
                 }

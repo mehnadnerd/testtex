@@ -15,6 +15,10 @@ public class RomanQuestion extends Question {
 		romanchoices.add(c);
 	}
 
+	public List<Choice> getRomanOptions() {
+		return romanchoices;
+	}
+
 	public int getRomanOptionNum(Choice c) {
 		return romanchoices.indexOf(c);
 	}

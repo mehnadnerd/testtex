@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * Only checks to make sure nothing after is before and vice versa, not for existence, immutable
- *
+ * TODO: Remove and replace with alphabetical sort
  * @param <T>
  */
 public class PlacementRequirement<T> {
