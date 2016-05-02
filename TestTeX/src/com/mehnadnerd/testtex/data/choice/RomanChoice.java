@@ -4,6 +4,7 @@ import com.mehnadnerd.testtex.data.question.RomanQuestion;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by mehnadnerd on 2016-04-16.
@@ -44,7 +45,6 @@ public class RomanChoice extends Choice {
 
     private List<RomanChoiceXref> refs = new ArrayList<>();
 
-    //TODO: Make work for more than 3 options
     @Override
     public String toTeXFormat() {
         StringBuffer toRet = new StringBuffer();
@@ -53,6 +53,8 @@ public class RomanChoice extends Choice {
         } else {
             toRet.append("\\choice ");
         }
+        toRet.append(this.toString());
+        /*
         switch (refs.size()) {
             case 1:
                 toRet.append(refs.get(0).toTeXFormat());
@@ -68,8 +70,7 @@ public class RomanChoice extends Choice {
                 toRet.append(refs.get(1).toTeXFormat());
                 toRet.append(", and ");
                 toRet.append(refs.get(2).toTeXFormat());
-        }
-
+        }*/
         toRet.append(".\n");
         return toRet.toString();
     }
@@ -78,6 +79,9 @@ public class RomanChoice extends Choice {
     public String toString() {
         StringBuffer toRet = new StringBuffer();
         switch (refs.size()) {
+            case 0:
+                toRet.append("None");
+                break;
             case 1:
                 toRet.append(refs.get(0).toTeXFormat());
                 break;
@@ -92,17 +96,24 @@ public class RomanChoice extends Choice {
                 toRet.append(refs.get(1).toTeXFormat());
                 toRet.append(", and ");
                 toRet.append(refs.get(2).toTeXFormat());
+                break;
+            default:
+                for (int i = 0; i < refs.size() - 1; i++) {
+                    toRet.append(refs.get(i).toTeXFormat());
+                    toRet.append(", ");
+                }
+                toRet.append("and ");
+                toRet.append(refs.get(refs.size() - 1).toTeXFormat());
+                break;
         }
         return toRet.toString();
     }
 
     @Override
     public boolean getCorrect() {
-        boolean toRet = true;
-        //TODO: Make so ones with only one correct choice are still false
-        for (RomanChoiceXref r : refs) {
-            toRet &= r.isCorrect();
-        }
-        return toRet;
+        List<Choice> allCorrect = encaps.getRomanOptions().stream().filter(c -> c.getCorrect()).collect(Collectors.toList());
+        List<Choice> these = refs.stream().map(r -> r.getReference()).collect(Collectors.toList());
+
+        return (allCorrect.containsAll(these) && these.containsAll(allCorrect));
     }
 }

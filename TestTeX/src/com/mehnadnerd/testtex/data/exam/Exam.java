@@ -64,8 +64,7 @@ public class Exam implements TeXFormatable, DisplayFormatable {
         }
         toRet.append("]{exam}\n");
         toRet.append("\\usepackage{enumerate}\n");
-        toRet.append("\\usepackage{listings}");
-        toRet.append("\n");
+        toRet.append("\\usepackage{listings}\n");
         toRet.append("\\title{").append(examTitle).append("}\n");
         toRet.append("\\date{").append(testDate).append("}\n");
 
@@ -102,5 +101,9 @@ public class Exam implements TeXFormatable, DisplayFormatable {
     @Override
     public String toString() {
         return this.examTitle;
+    }
+
+    public void removeQuestion(Question toDelete) {
+        questions.remove(toDelete);
     }
 }

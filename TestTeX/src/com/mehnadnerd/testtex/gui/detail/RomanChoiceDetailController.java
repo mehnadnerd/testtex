@@ -46,7 +46,7 @@ public class RomanChoiceDetailController implements Initializable {
     public void loadRomanChoice(RomanChoice c) {
         choicePane.getChildren().removeAll(choicePane.getChildren());
         optionChecks = new ArrayList<>();
-        System.out.println(c.getEncaps().getRomanOptions());
+        //System.out.println(c.getEncaps().getRomanOptions());
         for (Choice r : c.getEncaps().getRomanOptions()) {
             CheckBox toAdd = new CheckBox(r.toString());
             toAdd.setLayoutX(14);
@@ -56,7 +56,7 @@ public class RomanChoiceDetailController implements Initializable {
             if (c.getRefs().contains(new RomanChoiceXref(c.getEncaps(), r))) {
                 toAdd.setSelected(true);
             }
-            System.out.println("Adding Checkbox with name " + toAdd.getText());
+            //System.out.println("Adding Checkbox with name " + toAdd.getText());
             optionChecks.add(toAdd);
         }
         choicePane.getChildren().addAll(optionChecks);

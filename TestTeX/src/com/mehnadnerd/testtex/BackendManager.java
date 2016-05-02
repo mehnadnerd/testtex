@@ -36,8 +36,8 @@ public class BackendManager {
         RomanQuestion q2 = new RomanQuestion();
         q2.setQuestionText("Which of the following is (are) true of Turtwig?");
         q2.setPointVal(387);
-        Choice ci = new Choice("They are the best!");
-        Choice cii = new Choice("They are cute.");
+        Choice ci = new Choice("They are the best!", true);
+        Choice cii = new Choice("They are cute.", true);
         Choice ciii = new Choice("They are stupid.");
         q2.addRomanOption(ci);
         q2.addRomanOption(cii);
@@ -45,7 +45,7 @@ public class BackendManager {
         q2.addChoice(new RomanChoice(q2, ci));
         q2.addChoice(new RomanChoice(q2, cii));
         q2.addChoice(new RomanChoice(q2, ciii));
-        q2.addChoice(new RomanChoice(q2, ci, ciii));
+        q2.addChoice(new RomanChoice(q2, ci, cii));
         q2.addChoice(new RomanChoice(q2, ci, cii, ciii));
         Question q3 = new Question();
         q3.setQuestionText("How much does Turtwig weigh?");

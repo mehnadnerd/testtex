@@ -33,6 +33,7 @@ import java.util.ResourceBundle;
  */
 public class MainViewController implements Initializable {
 
+
     private DetailPaneListener paneListener;
 
     @FXML
@@ -56,6 +57,8 @@ public class MainViewController implements Initializable {
     @FXML
     private MenuItem smartAddButton;
     @FXML
+    public MenuItem deleteButton;
+    @FXML
     private MenuItem questionAddButton;
     @FXML
     private MenuItem romanQuestionAddButton;
@@ -76,13 +79,14 @@ public class MainViewController implements Initializable {
         treeView.getSelectionModel().selectedItemProperty().addListener(paneListener);
 
 
+        smartAddButton.setAccelerator(new KeyCodeCombination(KeyCode.I, KeyCombination.SHORTCUT_DOWN));
+        deleteButton.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.SHORTCUT_DOWN));
         saveButton.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
         saveAsButton.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHIFT_DOWN, KeyCombination.SHORTCUT_DOWN));
         newButton.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
         closeButton.setAccelerator(new KeyCodeCombination(KeyCode.W, KeyCombination.SHORTCUT_DOWN));
         openButton.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
         exportButton.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
-        smartAddButton.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHORTCUT_DOWN));
 
 
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -99,7 +103,6 @@ public class MainViewController implements Initializable {
             }
         });
 
-        //TODO: Fix adding RomanChoices
         smartAddButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -122,19 +125,75 @@ public class MainViewController implements Initializable {
                     treeView.getRoot().getChildren().add(toAdd.toDisplayFormat());
                 } else if (o.getClass().equals(String.class) &&
                         ((String) o).equalsIgnoreCase("Choices")) {
+                    choiceAddButton.getOnAction().handle(null);
+                    /*
                     Choice toAdd = new Choice("Response");
 
                     ((Question) ((TreeItem) treeView.getSelectionModel().getSelectedItem()).getParent().getValue()).addChoice(toAdd);
                     ((TreeItem) treeView.getSelectionModel().getSelectedItem()).getChildren().add(toAdd.toDisplayFormat());
-
+                    */
                 } else if (o.getClass().equals(Choice.class)) {
+                    choiceAddButton.getOnAction().handle(null);
+                    /*
                     Choice toAdd = new Choice("Response");
                     ((com.mehnadnerd.testtex.data.question.Question) ((TreeItem) treeView.getSelectionModel().getSelectedItem()).getParent().getParent().getValue()).addChoice(toAdd);
                     ((TreeItem) treeView.getSelectionModel().getSelectedItem()).getParent().getChildren().add(toAdd.toDisplayFormat());
+                    */
+                } else if (o.getClass().equals(RomanChoice.class)) {
+                    choiceAddButton.getOnAction().handle(null);
                 } else {
+                    choiceAddButton.getOnAction().handle(null);
                     System.out.println(o.getClass());
                 }
                 forceRefresh();
+            }
+        });
+
+        deleteButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                Object toDelete = ((TreeItem) treeView.getSelectionModel().getSelectedItem()).getValue();
+                System.out.println("Attempting to remove a " + toDelete.getClass().getCanonicalName());
+
+                //remove from data structure
+
+                if (toDelete.getClass().equals(Exam.class)) {
+                    //sanity check, doesn't delete root
+                    System.err.println("Attempting to delete exam node (Is root node)");
+                    return;
+                } else if (toDelete.getClass().equals(String.class)) {
+                    //sanity check, strings are for labelling things
+                    System.err.println("Attempting to delete String node, need to remove parent");
+                    return;
+                } else if (Question.class.isAssignableFrom(toDelete.getClass())) {
+                    //remove from exam
+                    ((Exam) treeView.getRoot().getValue()).removeQuestion((Question) toDelete);
+                } else if (toDelete.getClass().equals(Choice.class)
+                        && ((TreeItem) treeView.getSelectionModel().getSelectedItem())
+                        .getParent().getParent().getValue().getClass().equals(Question.class)) {
+
+                    ((Question) ((TreeItem) treeView.getSelectionModel().getSelectedItem())
+                            .getParent().getParent().getValue()).removeChoice((Choice) toDelete);
+
+                } else if (toDelete.getClass().equals(Choice.class)
+                        && ((TreeItem) treeView.getSelectionModel().getSelectedItem())
+                        .getParent().getParent().getValue().getClass().equals(RomanQuestion.class)) {
+
+                    ((RomanQuestion) ((TreeItem) treeView.getSelectionModel().getSelectedItem())
+                            .getParent().getParent().getValue()).removeRomanOption((Choice) toDelete);
+
+                } else if (toDelete.getClass().equals(RomanChoice.class)) {
+                    ((RomanQuestion) ((TreeItem) treeView.getSelectionModel().getSelectedItem())
+                            .getParent().getParent().getValue()).removeChoice((RomanChoice) toDelete);
+                }
+
+
+                //remove from view tree
+                ((TreeItem) treeView.getSelectionModel().getSelectedItem()).getParent().getChildren()
+                        .remove(treeView.getSelectionModel().getSelectedItem());
+
+
             }
         });
 
@@ -156,51 +215,69 @@ public class MainViewController implements Initializable {
             }
         });
 
-        choiceAddButton.setOnAction(new EventHandler<ActionEvent>() {
-                                        @Override
-                                        public void handle(ActionEvent event) {
-                                            Choice toAdd = new Choice();
-                                            TreeItem selected = ((TreeItem) treeView.getSelectionModel().getSelectedItem());
-                                            if (selected.getValue().getClass().equals(Question.class)) {
-                                                ((Question) selected.getValue()).addChoice(toAdd);
-                                                ((TreeItem) (selected).getChildren().get(0))
-                                                        .getChildren().add(toAdd.toDisplayFormat());
-                                            } else if (selected.getClass().equals(ChoiceContainerTreeItem.class)
-                                                    && selected.getValue().equals(TestTeXConstants.CHOICECONTAINERROMANOPTIONTEXT)) {
-                                                //roman option container
-                                                RomanQuestion q = (RomanQuestion) selected.getParent().getValue();
-                                                q.addRomanOption(toAdd);
-                                                selected.getChildren().add(toAdd.toDisplayFormat());
-                                            } else if (selected.getClass().equals(ChoiceContainerTreeItem.class)
-                                                    && selected.getValue().equals(TestTeXConstants.CHOICECONTAINERTREEITEMTEXT)
-                                                    && selected.getParent().getValue().getClass().equals(RomanQuestion.class)) {
-                                                //Container for RomanChoices under a RomanQuestion
-                                                RomanQuestion q = (RomanQuestion) selected.getParent().getValue();
-                                                toAdd = new RomanChoice(q);
+        choiceAddButton.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        Choice toAdd = new Choice();
+                        TreeItem selected = ((TreeItem) treeView.getSelectionModel().getSelectedItem());
+                        if (selected.getValue().getClass().equals(Question.class)) {
+                            ((Question) selected.getValue()).addChoice(toAdd);
+                            ((TreeItem) (selected).getChildren().get(0))
+                                    .getChildren().add(toAdd.toDisplayFormat());
+                        } else if (selected.getClass().equals(ChoiceContainerTreeItem.class)
+                                && selected.getValue().equals(TestTeXConstants.CHOICECONTAINERROMANOPTIONTEXT)) {
+                            //roman option container
+                            RomanQuestion q = (RomanQuestion) selected.getParent().getValue();
+                            q.addRomanOption(toAdd);
+                            selected.getChildren().add(toAdd.toDisplayFormat());
+                        } else if (selected.getClass().equals(ChoiceContainerTreeItem.class)
+                                && selected.getValue().equals(TestTeXConstants.CHOICECONTAINERTREEITEMTEXT)
+                                && selected.getParent().getValue().getClass().equals(RomanQuestion.class)) {
+                            //Container for RomanChoices under a RomanQuestion
+                            RomanQuestion q = (RomanQuestion) selected.getParent().getValue();
+                            toAdd = new RomanChoice(q);
 
-                                                q.addChoice(toAdd);
-                                                selected.getChildren().add(toAdd.toDisplayFormat());
+                            q.addChoice(toAdd);
+                            selected.getChildren().add(toAdd.toDisplayFormat());
 
-                                            } else if (selected.getClass().equals(ChoiceContainerTreeItem.class)
-                                                    && selected.getValue().equals(TestTeXConstants.CHOICECONTAINERTREEITEMTEXT)
-                                                    && selected.getParent().getValue().getClass().equals(Question.class)) {
-                                                //Is a container for Choices under a Question
-                                                ((Question) (selected).getParent().getValue())
-                                                        .addChoice(toAdd);
-                                                (selected).getChildren().add(toAdd.toDisplayFormat());
+                        } else if (selected.getClass().equals(ChoiceContainerTreeItem.class)
+                                && selected.getValue().equals(TestTeXConstants.CHOICECONTAINERTREEITEMTEXT)
+                                && selected.getParent().getValue().getClass().equals(Question.class)) {
+                            //Is a container for Choices under a Question
+                            ((Question) (selected).getParent().getValue())
+                                    .addChoice(toAdd);
+                            (selected).getChildren().add(toAdd.toDisplayFormat());
 
-                                            } else if (selected.getValue().getClass().equals(Choice.class)) {
-                                                //Choice, so add as sibling
-                                                ((Question) selected.getParent().getParent().getValue()).addChoice(toAdd);
-                                                selected.getParent().getChildren().add(toAdd.toDisplayFormat());
+                        } else if (selected.getValue().getClass().equals(Choice.class)
+                                && selected.getParent().getParent().getValue().getClass().equals(Question.class)) {
+                            //Choice, so add as sibling
+                            ((Question) selected.getParent().getParent().getValue()).addChoice(toAdd);
+                            selected.getParent().getChildren().add(toAdd.toDisplayFormat());
 
-                                            } else {
-                                                System.out.println("Failed to add choice to " + selected.getValue().getClass().getCanonicalName());
-                                                //Fail to add anything
-                                                //treeView.getRoot().getChildren().add(toAdd.toDisplayFormat());
-                                            }
-                                        }
-                                    }
+                        } else if (selected.getValue().getClass().equals(Choice.class)
+                                && selected.getParent().getParent().getValue().getClass().equals(RomanQuestion.class)) {
+
+                            //RomanOption, so add option
+
+                            ((RomanQuestion) selected.getParent().getParent().getValue()).addRomanOption(toAdd);
+                            selected.getParent().getChildren().add(toAdd.toDisplayFormat());
+
+                        } else if (selected.getValue().getClass().equals(RomanChoice.class)) {
+                            //create the roman choice
+                            toAdd = new RomanChoice((RomanQuestion) selected.getParent().getParent().getValue());
+                            //add to the roman question as a choice
+                            ((RomanQuestion) selected.getParent().getParent().getValue()).addChoice(toAdd);
+                            //add to display tree
+                            selected.getParent().getChildren().add(toAdd.toDisplayFormat());
+
+                        } else {
+                            System.out.println("Failed to add choice to " + selected.getValue().getClass().getCanonicalName());
+                            //Fail to add anything
+                            //treeView.getRoot().getChildren().add(toAdd.toDisplayFormat());
+                        }
+                    }
+                }
 
         );
 

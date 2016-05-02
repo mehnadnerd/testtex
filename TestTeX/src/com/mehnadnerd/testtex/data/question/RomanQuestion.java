@@ -29,9 +29,9 @@ public class RomanQuestion extends Question {
 		toRet.append(pointval);
 		toRet.append("]\n");
 		toRet.append(questiontext);
-		toRet.append("\n\\begin{enumerate}\n");
+		toRet.append("\n\\begin{enumerate}[I]\n");
 		for (Choice c: romanchoices) {
-			toRet.append(c.toTeXFormat().replace("\\choice", "\\item"));
+			toRet.append(c.toTeXFormat().replace("\\choice", "\\item").replace("\\CorrectChoice", "\\item"));
 		}
 		toRet.append("\\end{enumerate}\n\\begin{choices}\n");
 		//main choice format processing
@@ -52,5 +52,9 @@ public class RomanQuestion extends Question {
 		}
 		toRet.getChildren().add(romanOptions);
 		return toRet;
+	}
+
+	public void removeRomanOption(Choice toDelete) {
+		romanchoices.remove(toDelete);
 	}
 }
