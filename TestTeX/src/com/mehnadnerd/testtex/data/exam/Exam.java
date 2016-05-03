@@ -2,6 +2,7 @@ package com.mehnadnerd.testtex.data.exam;
 
 import com.mehnadnerd.testtex.data.DisplayFormatable;
 import com.mehnadnerd.testtex.data.TeXFormatable;
+import com.mehnadnerd.testtex.data.choice.Choice;
 import com.mehnadnerd.testtex.data.question.Question;
 import javafx.scene.control.TreeItem;
 
@@ -19,6 +20,7 @@ public class Exam implements TeXFormatable, DisplayFormatable {
     private String classTitle = "Turtwig Class";
     private String testDate = Integer.toString(LocalDateTime.now().getYear());
     private File saveLoc;
+    private File exportLoc;
     private boolean displayAnswers;
 
     public void setExamTitle(String s) {
@@ -63,6 +65,31 @@ public class Exam implements TeXFormatable, DisplayFormatable {
 
     public void setSaveLoc(File f) {
         this.saveLoc = f;
+    }
+
+    public File getExportLoc() {
+        return exportLoc;
+    }
+
+    public void setExportLoc(File f) {
+        this.exportLoc = f;
+    }
+
+    public static Exam createExampleExam() {
+        Exam e = new Exam();
+        e.setExamTitle("New Exam");
+        e.setClassTitle("Some Class");
+
+        Question q1 = new Question();
+        q1.setQuestionText("Is this a question?");
+        q1.setPointVal(1);
+        q1.addChoice(new Choice("Yes", true));
+        q1.addChoice(new Choice("No"));
+        q1.addChoice(new Choice("Maybe"));
+        q1.addChoice(new Choice("I don't know"));
+
+        e.addQuestion(q1);
+        return e;
     }
 
     @Override

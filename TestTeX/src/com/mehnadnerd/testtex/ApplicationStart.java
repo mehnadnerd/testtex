@@ -1,5 +1,6 @@
 package com.mehnadnerd.testtex;
 
+import com.mehnadnerd.testtex.data.exam.Exam;
 import com.mehnadnerd.testtex.gui.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,8 @@ public class ApplicationStart extends Application {
         Parent root = fxmlLoader.load();
         MainViewController m = fxmlLoader.getController();
         m.setStage(stage);
+        BackendManager.setStage(stage);
+        BackendManager.setExam(Exam.createExampleExam());
         Scene scene = new Scene(root, 1000, 600);
 
         stage.setTitle("TestTeX");

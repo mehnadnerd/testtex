@@ -6,15 +6,24 @@ import com.mehnadnerd.testtex.data.exam.Exam;
 import com.mehnadnerd.testtex.data.question.Question;
 import com.mehnadnerd.testtex.data.question.RomanQuestion;
 import javafx.scene.control.TreeItem;
+import javafx.stage.Stage;
 
 /**
  * Provides communication and access between gui and backend, horrible static mess
  */
 public class BackendManager {
-    private static Exam exam = createTestExam();
+
+    private static Stage stage;
+
+    public static void setStage(Stage s) {
+        stage = s;
+    }
+
+    private static Exam exam = Exam.createExampleExam();
 
     public static void setExam(Exam e) {
         exam = e;
+        stage.setTitle("TestTeX: " + e.getExamTitle());
     }
 
     public static Exam getExam() {
@@ -23,10 +32,6 @@ public class BackendManager {
 
     public static TreeItem getDisplayTree() {
         return exam.toDisplayFormat();
-    }
-
-    public static void export() {
-        System.out.println(exam.toTeXFormat());
     }
 
     private static Exam createTestExam() {

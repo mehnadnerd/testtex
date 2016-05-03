@@ -54,23 +54,6 @@ public class RomanChoice extends Choice {
             toRet.append("\\choice ");
         }
         toRet.append(this.toString());
-        /*
-        switch (refs.size()) {
-            case 1:
-                toRet.append(refs.get(0).toTeXFormat());
-                break;
-            case 2:
-                toRet.append(refs.get(0).toTeXFormat());
-                toRet.append(" and ");
-                toRet.append(refs.get(1).toTeXFormat());
-                break;
-            case 3:
-                toRet.append(refs.get(0).toTeXFormat());
-                toRet.append(", ");
-                toRet.append(refs.get(1).toTeXFormat());
-                toRet.append(", and ");
-                toRet.append(refs.get(2).toTeXFormat());
-        }*/
         toRet.append(".\n");
         return toRet.toString();
     }

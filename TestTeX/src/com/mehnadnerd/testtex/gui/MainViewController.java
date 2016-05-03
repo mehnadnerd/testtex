@@ -94,6 +94,14 @@ public class MainViewController implements Initializable {
         exportButton.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
 
 
+        newButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                BackendManager.setExam(Exam.createExampleExam());
+                forceRefresh();
+            }
+        });
+
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -113,6 +121,7 @@ public class MainViewController implements Initializable {
                 Exam toWrite = ((Exam) treeView.getRoot().getValue());
                 FileChooser saveAs = new FileChooser();
                 saveAs.setTitle("Save As");
+                saveAs.getExtensionFilters().add(new FileChooser.ExtensionFilter("TestTeX Exam", "*.tte"));
                 File saveLoc = saveAs.showSaveDialog(stage);
                 toWrite.setSaveLoc(saveLoc);
                 FileManager.write(toWrite, saveLoc);
@@ -126,6 +135,7 @@ public class MainViewController implements Initializable {
                 open.setTitle("Open Exam");
                 open.getExtensionFilters().add(new FileChooser.ExtensionFilter("TestTeX Exam", "*.tte"));
                 BackendManager.setExam(FileManager.read(open.showOpenDialog(stage)));
+                stage.setTitle("TestTeX: " + BackendManager.getExam().getExamTitle());
                 forceRefresh();
             }
         });
@@ -133,7 +143,15 @@ public class MainViewController implements Initializable {
         exportButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                BackendManager.export();
+                File toExport = BackendManager.getExam().getExportLoc();
+                if (toExport == null) {
+                    FileChooser export = new FileChooser();
+                    export.setTitle("Export");
+                    export.getExtensionFilters().add(new FileChooser.ExtensionFilter("TeX Exam", "*.tex"));
+                    toExport = export.showSaveDialog(stage);
+                    BackendManager.getExam().setExportLoc(toExport);
+                }
+                FileManager.export(BackendManager.getExam(), toExport);
             }
         });
 
@@ -179,7 +197,7 @@ public class MainViewController implements Initializable {
                     choiceAddButton.getOnAction().handle(null);
                     System.out.println(o.getClass());
                 }
-                forceRefresh();
+                //forceRefresh();
             }
         });
 
@@ -377,6 +395,7 @@ public class MainViewController implements Initializable {
                 } else if (oldValue.getValue().getClass().equals(Exam.class)) {
                     Exam e = (Exam) oldValue.getValue();
                     e = examDetail.writeExam(e);//mutates, so assignment is actually unnessecary
+                    stage.setTitle("TestTeX: " + e.getExamTitle());
                     // e.setExamTitle(((TextField) examDetailPane.getChildren().get(1)).getText());
                 } else if (oldValue.getValue().getClass().equals(Question.class)
                         || oldValue.getValue().getClass().equals(RomanQuestion.class)) {
@@ -412,7 +431,7 @@ public class MainViewController implements Initializable {
             } else {
                 detailPane.getChildren().set(0, noneDetailPane);
             }
-            forceRefresh();
+            //forceRefresh();
 
 
         }
@@ -426,6 +445,4 @@ public class MainViewController implements Initializable {
     public void setStage(Stage s) {
         this.stage = s;
     }
-
-
 }

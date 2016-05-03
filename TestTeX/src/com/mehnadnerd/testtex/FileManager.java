@@ -41,6 +41,8 @@ public class FileManager {
         try {
             FileWriter fw = new FileWriter(f);
             fw.write(exam.toTeXFormat());
+            System.out.println("Writing to " + f.toString() + "\n" + exam.toTeXFormat());
+            fw.close();
             return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
