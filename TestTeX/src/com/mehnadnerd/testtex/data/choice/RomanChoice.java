@@ -84,6 +84,7 @@ public class RomanChoice extends Choice {
                 break;
             case 1:
                 toRet.append(refs.get(0).toTeXFormat());
+                toRet.append(" only");
                 break;
             case 2:
                 toRet.append(refs.get(0).toTeXFormat());

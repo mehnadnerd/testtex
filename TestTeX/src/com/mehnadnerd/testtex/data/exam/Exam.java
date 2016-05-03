@@ -5,6 +5,7 @@ import com.mehnadnerd.testtex.data.TeXFormatable;
 import com.mehnadnerd.testtex.data.question.Question;
 import javafx.scene.control.TreeItem;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Exam implements TeXFormatable, DisplayFormatable {
     private String examTitle = "Turtwig Exam";
     private String classTitle = "Turtwig Class";
     private String testDate = Integer.toString(LocalDateTime.now().getYear());
+    private File saveLoc;
     private boolean displayAnswers;
 
     public void setExamTitle(String s) {
@@ -53,6 +55,14 @@ public class Exam implements TeXFormatable, DisplayFormatable {
 
     public boolean getDisplayAnswers() {
         return displayAnswers;
+    }
+
+    public File getSaveLoc() {
+        return saveLoc;
+    }
+
+    public void setSaveLoc(File f) {
+        this.saveLoc = f;
     }
 
     @Override

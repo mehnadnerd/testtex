@@ -13,6 +13,14 @@ import javafx.scene.control.TreeItem;
 public class BackendManager {
     private static Exam exam = createTestExam();
 
+    public static void setExam(Exam e) {
+        exam = e;
+    }
+
+    public static Exam getExam() {
+        return exam;
+    }
+
     public static TreeItem getDisplayTree() {
         return exam.toDisplayFormat();
     }

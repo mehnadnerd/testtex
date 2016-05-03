@@ -1,6 +1,7 @@
 package com.mehnadnerd.testtex.gui;
 
 import com.mehnadnerd.testtex.BackendManager;
+import com.mehnadnerd.testtex.FileManager;
 import com.mehnadnerd.testtex.data.choice.Choice;
 import com.mehnadnerd.testtex.data.choice.RomanChoice;
 import com.mehnadnerd.testtex.data.exam.Exam;
@@ -23,7 +24,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -33,6 +37,7 @@ import java.util.ResourceBundle;
  */
 public class MainViewController implements Initializable {
 
+    private Stage stage;
 
     private DetailPaneListener paneListener;
 
@@ -92,7 +97,36 @@ public class MainViewController implements Initializable {
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                File toSave = ((Exam) treeView.getRoot().getValue()).getSaveLoc();
+                if (toSave == null) {
+                    saveAsButton.getOnAction().handle(null);
+                    return;
+                }
+                FileManager.write(((Exam) treeView.getRoot().getValue()), toSave);
 
+            }
+        });
+
+        saveAsButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Exam toWrite = ((Exam) treeView.getRoot().getValue());
+                FileChooser saveAs = new FileChooser();
+                saveAs.setTitle("Save As");
+                File saveLoc = saveAs.showSaveDialog(stage);
+                toWrite.setSaveLoc(saveLoc);
+                FileManager.write(toWrite, saveLoc);
+            }
+        });
+
+        openButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                FileChooser open = new FileChooser();
+                open.setTitle("Open Exam");
+                open.getExtensionFilters().add(new FileChooser.ExtensionFilter("TestTeX Exam", "*.tte"));
+                BackendManager.setExam(FileManager.read(open.showOpenDialog(stage)));
+                forceRefresh();
             }
         });
 
@@ -292,6 +326,7 @@ public class MainViewController implements Initializable {
     }
 
     private void forceRefresh() {
+        treeView.setRoot(BackendManager.getDisplayTree());
         treeView.refresh();
     }
 
@@ -386,6 +421,10 @@ public class MainViewController implements Initializable {
         public void handle(ActionEvent event) {
 
         }
+    }
+
+    public void setStage(Stage s) {
+        this.stage = s;
     }
 
 

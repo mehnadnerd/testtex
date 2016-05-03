@@ -1,5 +1,6 @@
 package com.mehnadnerd.testtex;
 
+import com.mehnadnerd.testtex.gui.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,7 +11,10 @@ public class ApplicationStart extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("gui/main.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/main.fxml"));
+        Parent root = fxmlLoader.load();
+        MainViewController m = fxmlLoader.getController();
+        m.setStage(stage);
         Scene scene = new Scene(root, 1000, 600);
 
         stage.setTitle("TestTeX");
