@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  * Created by mehnadnerd on 2016-04-16.
  */
 public class RomanChoice extends Choice {
-    private RomanQuestion encaps;
+    private final RomanQuestion encaps;
 
     public RomanChoice(RomanQuestion encaps) {
         this.encaps = encaps;

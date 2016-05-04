@@ -1,8 +1,9 @@
 package com.mehnadnerd.testtex.gui.detail;
 
 import com.mehnadnerd.testtex.data.question.Question;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
@@ -11,7 +12,7 @@ import java.util.ResourceBundle;
 /**
  * Created by mehnadnerd on 2016-04-18.
  */
-public class QuestionDetailController implements Initializable {
+public class QuestionDetailController extends DetailController {
     @FXML
     public TextField QuestionText;
     @FXML
@@ -53,5 +54,11 @@ public class QuestionDetailController implements Initializable {
 
     public void setQuestionPoints(int i) {
         QuestionPoints.setText(Integer.toString(i));
+    }
+
+    @Override
+    public void setEnterHandler(EventHandler<ActionEvent> handler) {
+        QuestionText.setOnAction(handler);
+        QuestionPoints.setOnAction(handler);
     }
 }

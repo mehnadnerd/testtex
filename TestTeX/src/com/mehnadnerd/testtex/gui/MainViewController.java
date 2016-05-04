@@ -258,14 +258,15 @@ public class MainViewController implements Initializable {
             }
         });
 
-        romanQuestionAddButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                RomanQuestion toAdd = new RomanQuestion();
-                ((Exam) treeView.getRoot().getValue()).addQuestion(toAdd);
-                treeView.getRoot().getChildren().add(toAdd.toDisplayFormat());
-            }
-        });
+        romanQuestionAddButton.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        RomanQuestion toAdd = new RomanQuestion();
+                        ((Exam) treeView.getRoot().getValue()).addQuestion(toAdd);
+                        treeView.getRoot().getChildren().add(toAdd.toDisplayFormat());
+                    }
+                });
 
         choiceAddButton.setOnAction(
                 new EventHandler<ActionEvent>() {
@@ -333,12 +334,13 @@ public class MainViewController implements Initializable {
 
         );
 
-        refreshButton.setOnAction(new EventHandler<ActionEvent>() {
-                                      @Override
-                                      public void handle(ActionEvent event) {
-                                          forceRefresh();
-                                      }
-                                  }
+        refreshButton.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        forceRefresh();
+                    }
+                }
 
         );
     }
@@ -365,15 +367,43 @@ public class MainViewController implements Initializable {
                 FXMLLoader fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailChoice.fxml"));
                 choiceDetailPane = fxmlLoader.load();
                 choiceDetail = fxmlLoader.getController();
+                choiceDetail.setEnterHandler(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        choiceDetailFromPanel(((Choice) ((TreeItem) treeView.getSelectionModel()
+                                .getSelectedItem()).getValue()));
+                    }
+                });
                 fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailExam.fxml"));
                 examDetailPane = fxmlLoader.load();
                 examDetail = fxmlLoader.getController();
+                examDetail.setEnterHandler(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        examDetailFromPanel(((Exam) ((TreeItem) treeView.getSelectionModel()
+                                .getSelectedItem()).getValue()));
+                    }
+                });
                 fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailQuestion.fxml"));
                 questionDetailPane = fxmlLoader.load();
                 questionDetail = fxmlLoader.getController();
+                questionDetail.setEnterHandler(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        questionDetailFromPanel(((Question) ((TreeItem) treeView.getSelectionModel()
+                                .getSelectedItem()).getValue()));
+                    }
+                });
                 fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailRomanChoice.fxml"));
                 romanChoiceDetailPane = fxmlLoader.load();
                 romanChoiceDetail = fxmlLoader.getController();
+                romanChoiceDetail.setEnterHandler(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        romanChoiceDetailFromPanel(((RomanChoice) ((TreeItem) treeView.getSelectionModel()
+                                .getSelectedItem()).getValue()));
+                    }
+                });
                 fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailNone.fxml"));
                 noneDetailPane = fxmlLoader.load();
             } catch (IOException e) {
@@ -384,27 +414,47 @@ public class MainViewController implements Initializable {
             treeView.getSelectionModel().select(treeView.getRoot());
         }
 
+        private void examDetailFromPanel(Exam e) {
+            e = examDetail.writeExam(e);//mutates, so assignment is actually unnessecary
+            stage.setTitle("TestTeX: " + e.getExamTitle());
+            treeView.refresh();
+        }
+
+        private void choiceDetailFromPanel(Choice c) {
+            c = choiceDetail.writeChoice(c);//mutates, so assignment is actually unnessecary
+            treeView.refresh();
+        }
+
+        private void questionDetailFromPanel(Question q) {
+            q = questionDetail.writeQuestion(q);//mutates, so assignment is actually unnessecary
+            treeView.refresh();
+        }
+
+        private void romanChoiceDetailFromPanel(RomanChoice r) {
+            r = romanChoiceDetail.writeRomanChoice(r);//mutates, so assignment is actually unnessecary
+            treeView.refresh();
+        }
+
         @Override
         public void changed(ObservableValue<? extends TreeItem<Object>> observable, TreeItem<Object> oldValue, TreeItem<Object> newValue) {
             //use old values to record changes
             if (oldValue != null) {
                 if (oldValue.getValue().getClass().equals(Choice.class)) {
                     Choice c = ((Choice) oldValue.getValue());
-                    c = choiceDetail.writeChoice(c);//n.b. write choice mutates
+                    choiceDetailFromPanel(c);
                     treeView.refresh();
                 } else if (oldValue.getValue().getClass().equals(Exam.class)) {
                     Exam e = (Exam) oldValue.getValue();
-                    e = examDetail.writeExam(e);//mutates, so assignment is actually unnessecary
-                    stage.setTitle("TestTeX: " + e.getExamTitle());
+                    examDetailFromPanel(e);
                     // e.setExamTitle(((TextField) examDetailPane.getChildren().get(1)).getText());
                 } else if (oldValue.getValue().getClass().equals(Question.class)
                         || oldValue.getValue().getClass().equals(RomanQuestion.class)) {
                     Question q = (Question) oldValue.getValue();
-                    q = questionDetail.writeQuestion(q);
+                    questionDetailFromPanel(q);
                     //q.setQuestionText(((TextField) questionDetailPane.getChildren().get(1)).getText());
                 } else if (oldValue.getValue().getClass().equals(RomanChoice.class)) {
                     RomanChoice c = (RomanChoice) oldValue.getValue();
-                    c = romanChoiceDetail.writeRomanChoice(c);
+                    romanChoiceDetailFromPanel(c);
                 }
             }
             if (newValue != null) {

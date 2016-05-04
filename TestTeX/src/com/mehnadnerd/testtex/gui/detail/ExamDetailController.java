@@ -1,8 +1,9 @@
 package com.mehnadnerd.testtex.gui.detail;
 
 import com.mehnadnerd.testtex.data.exam.Exam;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
@@ -12,7 +13,7 @@ import java.util.ResourceBundle;
 /**
  * Created by mehnadnerd on 2016-04-18.
  */
-public class ExamDetailController implements Initializable {
+public class ExamDetailController extends DetailController {
     @FXML
     private CheckBox ExamShowAnswers;
     @FXML
@@ -72,5 +73,13 @@ public class ExamDetailController implements Initializable {
 
     public void setExamTitle(String s) {
         ExamTitle.setText(s);
+    }
+
+    @Override
+    public void setEnterHandler(EventHandler<ActionEvent> handler) {
+        ExamShowAnswers.setOnAction(handler);
+        ExamDate.setOnAction(handler);
+        ExamClass.setOnAction(handler);
+        ExamTitle.setOnAction(handler);
     }
 }

@@ -77,8 +77,9 @@ public class Exam implements TeXFormatable, DisplayFormatable {
 
     public static Exam createExampleExam() {
         Exam e = new Exam();
-        e.setExamTitle("New Exam");
-        e.setClassTitle("Some Class");
+        e.setExamTitle("Exam Title");
+        e.setClassTitle("Class Title");
+        e.setExamDate("" + LocalDateTime.now().getYear());
 
         Question q1 = new Question();
         q1.setQuestionText("Is this a question?");

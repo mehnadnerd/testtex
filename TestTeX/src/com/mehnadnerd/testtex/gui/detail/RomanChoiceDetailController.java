@@ -3,8 +3,9 @@ package com.mehnadnerd.testtex.gui.detail;
 import com.mehnadnerd.testtex.data.choice.Choice;
 import com.mehnadnerd.testtex.data.choice.RomanChoice;
 import com.mehnadnerd.testtex.data.choice.RomanChoiceXref;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.Pane;
 
@@ -16,14 +17,14 @@ import java.util.ResourceBundle;
 /**
  * Created by mehnadnerd on 2016-04-18.
  */
-public class RomanChoiceDetailController implements Initializable {
+public class RomanChoiceDetailController extends DetailController {
 
     @FXML
     public Pane rootPane;
     @FXML
     public Pane choicePane;
 
-    private List<CheckBox> optionChecks;
+    private List<CheckBox> optionChecks = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -60,5 +61,12 @@ public class RomanChoiceDetailController implements Initializable {
             optionChecks.add(toAdd);
         }
         choicePane.getChildren().addAll(optionChecks);
+    }
+
+    @Override
+    public void setEnterHandler(EventHandler<ActionEvent> handler) {
+        for (CheckBox c : optionChecks) {
+            c.setOnAction(handler);
+        }
     }
 }

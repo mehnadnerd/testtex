@@ -1,8 +1,9 @@
 package com.mehnadnerd.testtex.gui.detail;
 
 import com.mehnadnerd.testtex.data.choice.Choice;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
@@ -12,7 +13,7 @@ import java.util.ResourceBundle;
 /**
  * Created by mehnadnerd on 2016-04-18.
  */
-public class ChoiceDetailController implements Initializable {
+public class ChoiceDetailController extends DetailController {
     @FXML
     private TextField ChoiceText;
     @FXML
@@ -60,5 +61,12 @@ public class ChoiceDetailController implements Initializable {
 
     public void setChoiceCorrect(boolean b) {
         ChoiceCorrect.setSelected(b);
+    }
+
+    @Override
+    public void setEnterHandler(EventHandler<ActionEvent> handler) {
+        ChoiceText.setOnAction(handler);
+        ChoiceExplanation.setOnAction(handler);
+        ChoiceCorrect.setOnAction(handler);
     }
 }

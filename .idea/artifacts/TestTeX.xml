@@ -1,0 +1,22 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" build-on-make="true" name="TestTeX">
+    <output-path>$PROJECT_DIR$/out/artifacts/TestTeX</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="com.mehnadnerd.testtex.ApplicationStart" />
+        <option name="description" value="An application for creating exams using the LaTeX &quot;exam&quot; format." />
+        <option name="height" value="600" />
+        <option name="htmlParamFile" value="" />
+        <option name="paramFile" value="" />
+        <option name="title" value="TestTeX" />
+        <option name="vendor" value="MehNadnerd" />
+        <option name="width" value="1000" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="TestTeX.jar">
+        <element id="module-output" name="TestTeX" />
+      </element>
+    </root>
+  </artifact>
+</component>
