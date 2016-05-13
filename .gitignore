@@ -42,17 +42,8 @@ build/
 # STS (Spring Tool Suite)
 #.springBeans
 
-.metadata/.log
-
-.metadata/version.ini
-
-*.snap
 
 *.aux
-
-*.aux
-
-TurtleShellReasons.aux
 
 *.log
 

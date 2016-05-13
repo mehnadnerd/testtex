@@ -23,7 +23,10 @@ public class BackendManager {
 
     public static void setExam(Exam e) {
         exam = e;
-        stage.setTitle("TestTeX: " + e.getExamTitle());
+        if (stage != null) {
+            stage.setTitle("TestTeX: " + e.getExamTitle());
+        }
+
     }
 
     public static Exam getExam() {

@@ -89,7 +89,7 @@ public class FileManager {
             //set background color of each Pane
             popupPane.setStyle("-fx-padding:10px;");
             //add everything to panes
-            popupPane.getChildren().addAll(popupLabel, closePopup);
+            popupPane.getChildren().addAll(popupLabel, closePopup, new Label(e.toString()));
             Scene popupScene = new Scene(popupPane, 600, 100);
             //make another stage for scene2
             popup.setScene(popupScene);

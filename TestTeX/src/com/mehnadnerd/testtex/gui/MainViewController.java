@@ -105,12 +105,12 @@ public class MainViewController implements Initializable {
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                File toSave = ((Exam) treeView.getRoot().getValue()).getSaveLoc();
+                File toSave = BackendManager.getExam().getSaveLoc();
                 if (toSave == null) {
                     saveAsButton.getOnAction().handle(null);
                     return;
                 }
-                FileManager.write(((Exam) treeView.getRoot().getValue()), toSave);
+                FileManager.write(BackendManager.getExam(), toSave);
 
             }
         });
@@ -118,7 +118,7 @@ public class MainViewController implements Initializable {
         saveAsButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Exam toWrite = ((Exam) treeView.getRoot().getValue());
+                Exam toWrite = BackendManager.getExam();
                 FileChooser saveAs = new FileChooser();
                 saveAs.setTitle("Save As");
                 saveAs.getExtensionFilters().add(new FileChooser.ExtensionFilter("TestTeX Exam", "*.tte"));
@@ -173,7 +173,7 @@ public class MainViewController implements Initializable {
                     treeView.getRoot().getChildren().add(toAdd.toDisplayFormat());
                 } else if (o.getClass().equals(Question.class)) {
                     Question toAdd = new Question();
-                    ((Exam) treeView.getRoot().getValue()).addQuestion(toAdd);
+                    BackendManager.getExam().addQuestion(toAdd);
                     treeView.getRoot().getChildren().add(toAdd.toDisplayFormat());
                 } else if (o.getClass().equals(String.class) &&
                         ((String) o).equalsIgnoreCase("Choices")) {
@@ -220,7 +220,7 @@ public class MainViewController implements Initializable {
                     return;
                 } else if (Question.class.isAssignableFrom(toDelete.getClass())) {
                     //remove from exam
-                    ((Exam) treeView.getRoot().getValue()).removeQuestion((Question) toDelete);
+                    BackendManager.getExam().removeQuestion((Question) toDelete);
                 } else if (toDelete.getClass().equals(Choice.class)
                         && ((TreeItem) treeView.getSelectionModel().getSelectedItem())
                         .getParent().getParent().getValue().getClass().equals(Question.class)) {
@@ -253,7 +253,7 @@ public class MainViewController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 Question toAdd = new Question();
-                ((Exam) treeView.getRoot().getValue()).addQuestion(toAdd);
+                BackendManager.getExam().addQuestion(toAdd);
                 treeView.getRoot().getChildren().add(toAdd.toDisplayFormat());
             }
         });
@@ -263,7 +263,7 @@ public class MainViewController implements Initializable {
                     @Override
                     public void handle(ActionEvent event) {
                         RomanQuestion toAdd = new RomanQuestion();
-                        ((Exam) treeView.getRoot().getValue()).addQuestion(toAdd);
+                        BackendManager.getExam().addQuestion(toAdd);
                         treeView.getRoot().getChildren().add(toAdd.toDisplayFormat());
                     }
                 });
@@ -338,11 +338,15 @@ public class MainViewController implements Initializable {
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
+                        System.out.println(BackendManager.getExam().toTeXFormat());
                         forceRefresh();
                     }
                 }
 
         );
+
+        this.newButton.getOnAction().handle(null);
+
     }
 
     private void forceRefresh() {
@@ -416,7 +420,9 @@ public class MainViewController implements Initializable {
 
         private void examDetailFromPanel(Exam e) {
             e = examDetail.writeExam(e);//mutates, so assignment is actually unnessecary
-            stage.setTitle("TestTeX: " + e.getExamTitle());
+            if (stage != null) {
+                stage.setTitle("TestTeX: " + e.getExamTitle());
+            }
             treeView.refresh();
         }
 
