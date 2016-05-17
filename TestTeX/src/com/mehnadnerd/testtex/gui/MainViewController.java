@@ -97,7 +97,8 @@ public class MainViewController implements Initializable {
         newButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                BackendManager.setExam(Exam.createExampleExam());
+                BackendManager.createNewExam();
+                System.out.println("Calling force refresh from new");
                 forceRefresh();
             }
         });
@@ -169,7 +170,9 @@ public class MainViewController implements Initializable {
                 if (o.getClass().equals(Exam.class)) {
                     Question toAdd = new Question();
                     //Add Question both to exam and to view-stops from having to regen tree
-                    ((Exam) o).addQuestion(toAdd);
+                    BackendManager.getExam().addQuestion(toAdd);
+                    System.out.println("Check for equality in exam: " + (o == BackendManager.getExam()));
+                    assert (o == BackendManager.getExam());
                     treeView.getRoot().getChildren().add(toAdd.toDisplayFormat());
                 } else if (o.getClass().equals(Question.class)) {
                     Question toAdd = new Question();
@@ -346,11 +349,15 @@ public class MainViewController implements Initializable {
         );
 
         this.newButton.getOnAction().handle(null);
+        forceRefresh();
 
     }
 
     private void forceRefresh() {
+        System.out.println("Exams were equal " + (treeView.getRoot().getValue() == BackendManager.getExam()));
+        System.out.println("Refreshing, old was: " + treeView.getRoot().getValue().toString());
         treeView.setRoot(BackendManager.getDisplayTree());
+
         treeView.refresh();
     }
 
@@ -414,7 +421,7 @@ public class MainViewController implements Initializable {
                 e.printStackTrace();
             }
             detailPane.getChildren().add(examDetailPane);
-            ((TextField) examDetailPane.getChildren().get(1)).setText(treeView.getRoot().getValue().toString());
+            ((TextField) examDetailPane.getChildren().get(1)).setText(BackendManager.getExam().toString());
             treeView.getSelectionModel().select(treeView.getRoot());
         }
 

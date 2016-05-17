@@ -19,7 +19,7 @@ public class BackendManager {
         stage = s;
     }
 
-    private static Exam exam = Exam.createExampleExam();
+    private static Exam exam = new Exam();
 
     public static void setExam(Exam e) {
         exam = e;
@@ -27,6 +27,10 @@ public class BackendManager {
             stage.setTitle("TestTeX: " + e.getExamTitle());
         }
 
+    }
+
+    public static void createNewExam() {
+        exam = new Exam();
     }
 
     public static Exam getExam() {

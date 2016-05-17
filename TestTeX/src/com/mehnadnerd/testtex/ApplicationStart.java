@@ -1,6 +1,5 @@
 package com.mehnadnerd.testtex;
 
-import com.mehnadnerd.testtex.data.exam.Exam;
 import com.mehnadnerd.testtex.gui.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,11 +15,12 @@ public class ApplicationStart extends Application {
         Parent root = fxmlLoader.load();
         MainViewController m = fxmlLoader.getController();
         m.setStage(stage);
+        stage.setTitle("TestTeX");
         BackendManager.setStage(stage);
-        BackendManager.setExam(Exam.createExampleExam());
+        BackendManager.createNewExam();
         Scene scene = new Scene(root, 1000, 600);
 
-        stage.setTitle("TestTeX");
+
         stage.setScene(scene);
         stage.show();
     }
@@ -28,12 +28,5 @@ public class ApplicationStart extends Application {
     public static void main(String[] args) {
         Application.launch(ApplicationStart.class, args);
     }
-    //Design Thingies
-    /* Have external reference as own class, so no need for metachoices-implement with ChociePlacementRequirements
-     *
-	 * 
-	 * 
-	 * 
-	 */
 
 }
