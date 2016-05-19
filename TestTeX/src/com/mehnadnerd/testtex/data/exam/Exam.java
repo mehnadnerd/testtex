@@ -23,6 +23,14 @@ public class Exam implements TeXFormatable, DisplayFormatable {
     private File exportLoc;
     private boolean displayAnswers;
 
+    public void setQuestions(List<Question> l) {
+        this.questions = l;
+    }
+
+    public List<Question> getQuestions() {
+        return this.questions;
+    }
+
     public void setExamTitle(String s) {
         this.examTitle = s;
     }

@@ -25,6 +25,14 @@ public class Question implements
         this.choices = choices;
     }
 
+    public List<Choice> getChoices() {
+        return choices;
+    }
+
+    public void setChoices(List<Choice> l) {
+        this.choices = l;
+    }
+
     public void addChoice(Choice c) {
         choices.add(c);
     }

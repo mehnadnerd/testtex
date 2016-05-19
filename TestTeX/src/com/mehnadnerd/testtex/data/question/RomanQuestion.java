@@ -9,52 +9,57 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RomanQuestion extends Question {
-	private List<Choice> romanchoices = new ArrayList<>();
+    private List<Choice> romanchoices = new ArrayList<>();
 
-	public void addRomanOption(Choice c) {
-		romanchoices.add(c);
-	}
+    public void addRomanOption(Choice c) {
+        romanchoices.add(c);
+    }
 
-	public List<Choice> getRomanOptions() {
-		return romanchoices;
-	}
+    public List<Choice> getRomanOptions() {
+        return romanchoices;
+    }
 
-	public int getRomanOptionNum(Choice c) {
-		return romanchoices.indexOf(c);
-	}
-	@Override
-	public String toTeXFormat() {
-		StringBuffer toRet = new StringBuffer();
-		toRet.append("\\question[");
-		toRet.append(pointval);
-		toRet.append("]\n");
-		toRet.append(questiontext);
-		toRet.append("\n\\begin{enumerate}[I]\n");
-		for (Choice c: romanchoices) {
-			toRet.append(c.toTeXFormat().replace("\\choice", "\\item").replace("\\CorrectChoice", "\\item"));
-		}
-		toRet.append("\\end{enumerate}\n\\begin{choices}\n");
-		//main choice format processing
-		for (Choice c : choices) {
-			toRet.append(c.toTeXFormat());
-		}
-		toRet.append("\\end{choices}\n\n");
+    public void setRomanOptions(List<Choice> l) {
+        this.romanchoices = l;
+    }
 
-		return toRet.toString();
-	}
+    public int getRomanOptionNum(Choice c) {
+        return romanchoices.indexOf(c);
+    }
 
-	@Override
-	public TreeItem toDisplayFormat() {
-		TreeItem toRet = super.toDisplayFormat();
-		TreeItem romanOptions = new ChoiceContainerTreeItem(TestTeXConstants.CHOICECONTAINERROMANOPTIONTEXT);
-		for (Choice c : romanchoices) {
-			romanOptions.getChildren().add(c.toDisplayFormat());
-		}
-		toRet.getChildren().add(romanOptions);
-		return toRet;
-	}
+    @Override
+    public String toTeXFormat() {
+        StringBuffer toRet = new StringBuffer();
+        toRet.append("\\question[");
+        toRet.append(pointval);
+        toRet.append("]\n");
+        toRet.append(questiontext);
+        toRet.append("\n\\begin{enumerate}[I]\n");
+        for (Choice c : romanchoices) {
+            toRet.append(c.toTeXFormat().replace("\\choice", "\\item").replace("\\CorrectChoice", "\\item"));
+        }
+        toRet.append("\\end{enumerate}\n\\begin{choices}\n");
+        //main choice format processing
+        for (Choice c : choices) {
+            toRet.append(c.toTeXFormat());
+        }
+        toRet.append("\\end{choices}\n\n");
 
-	public void removeRomanOption(Choice toDelete) {
-		romanchoices.remove(toDelete);
-	}
+        return toRet.toString();
+    }
+
+    @Override
+    public TreeItem toDisplayFormat() {
+        TreeItem toRet = super.toDisplayFormat();
+        TreeItem romanOptions = new ChoiceContainerTreeItem(TestTeXConstants.CHOICECONTAINERROMANOPTIONTEXT);
+        for (Choice c : romanchoices) {
+            romanOptions.getChildren().add(c.toDisplayFormat());
+        }
+        toRet.getChildren().add(romanOptions);
+        return toRet;
+    }
+
+    public void removeRomanOption(Choice toDelete) {
+        romanchoices.remove(toDelete);
+    }
 }

@@ -26,6 +26,10 @@
                         <MenuItem mnemonicParsing="false" text="Add Question" fx:id="questionAddButton"/>
                         <MenuItem mnemonicParsing="false" text="Add Roman Question" fx:id="romanQuestionAddButton"/>
                         <MenuItem mnemonicParsing="false" text="Add Choice" fx:id="choiceAddButton"/>
+                        <MenuItem mnemonicParsing="false" text="Randomise Question Order" fx:id="randomQuestionButton"/>
+                        <MenuItem mnemonicParsing="false" text="Randomise Choice Order" fx:id="randomChoiceButton"/>
+                        <MenuItem mnemonicParsing="false" text="Randomise All Choice Order"
+                                  fx:id="randomAllChoiceButton"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">

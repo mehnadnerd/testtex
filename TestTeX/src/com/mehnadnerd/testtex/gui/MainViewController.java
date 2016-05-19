@@ -11,6 +11,7 @@ import com.mehnadnerd.testtex.gui.detail.ChoiceDetailController;
 import com.mehnadnerd.testtex.gui.detail.ExamDetailController;
 import com.mehnadnerd.testtex.gui.detail.QuestionDetailController;
 import com.mehnadnerd.testtex.gui.detail.RomanChoiceDetailController;
+import com.mehnadnerd.testtex.util.ListManipulator;
 import com.mehnadnerd.testtex.util.TestTeXConstants;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -69,6 +70,12 @@ public class MainViewController implements Initializable {
     private MenuItem romanQuestionAddButton;
     @FXML
     private MenuItem choiceAddButton;
+    @FXML
+    public MenuItem randomQuestionButton;
+    @FXML
+    public MenuItem randomChoiceButton;
+    @FXML
+    public MenuItem randomAllChoiceButton;
 
     @FXML
     public MenuItem refreshButton;
@@ -348,6 +355,53 @@ public class MainViewController implements Initializable {
 
         );
 
+
+        //randomise order of questions
+        randomQuestionButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                BackendManager.getExam().setQuestions(
+                        ListManipulator.randomise(BackendManager.getExam().getQuestions()));
+                forceRefresh();
+            }
+        });
+
+        randomChoiceButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                TreeItem selected = ((TreeItem) treeView.getSelectionModel().getSelectedItem());
+                if (selected == null) {
+                    System.err.println("Attempting to randomise choices, null selected");
+                    return;
+                }
+                if (selected.getValue().getClass().equals(Question.class)) {
+                    ((Question) selected.getValue()).setChoices(
+                            ListManipulator.randomise(((Question) selected.getValue()).getChoices()));
+                } else if (selected.getValue().getClass().equals(RomanQuestion.class)) {
+                    ((RomanQuestion) selected.getValue()).setRomanOptions(
+                            ListManipulator.randomise(((RomanQuestion) selected.getValue()).getRomanOptions()));
+                } else {
+                    System.err.println("Attempting to randomise from " + selected.getValue().getClass().getCanonicalName() + ", can't.");
+                }
+                forceRefresh();
+            }
+        });
+
+        randomAllChoiceButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                for (Question q : BackendManager.getExam().getQuestions()) {
+                    if (q.getClass().equals(RomanQuestion.class)) {
+                        ((RomanQuestion) q).setRomanOptions(
+                                ListManipulator.randomise(((RomanQuestion) q).getRomanOptions()));
+                    } else {
+                        q.setChoices(ListManipulator.randomise(q.getChoices()));
+                    }
+                }
+                forceRefresh();
+            }
+        });
+
         this.newButton.getOnAction().handle(null);
         forceRefresh();
 
@@ -391,8 +445,7 @@ public class MainViewController implements Initializable {
                 examDetail.setEnterHandler(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        examDetailFromPanel(((Exam) ((TreeItem) treeView.getSelectionModel()
-                                .getSelectedItem()).getValue()));
+                        examDetailFromPanel(BackendManager.getExam());
                     }
                 });
                 fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailQuestion.fxml"));
@@ -457,8 +510,7 @@ public class MainViewController implements Initializable {
                     choiceDetailFromPanel(c);
                     treeView.refresh();
                 } else if (oldValue.getValue().getClass().equals(Exam.class)) {
-                    Exam e = (Exam) oldValue.getValue();
-                    examDetailFromPanel(e);
+                    examDetailFromPanel(BackendManager.getExam());
                     // e.setExamTitle(((TextField) examDetailPane.getChildren().get(1)).getText());
                 } else if (oldValue.getValue().getClass().equals(Question.class)
                         || oldValue.getValue().getClass().equals(RomanQuestion.class)) {
@@ -478,7 +530,8 @@ public class MainViewController implements Initializable {
                     //((TextField) choiceDetailPane.getChildren().get(1)).setText(newValue.getValue().toString());
                 } else if (newValue.getValue().getClass().equals(Exam.class)) {
                     detailPane.getChildren().set(0, examDetailPane);
-                    examDetail.loadExam((Exam) newValue.getValue());
+                    examDetail.loadExam(BackendManager.getExam());
+
                     //((TextField) examDetailPane.getChildren().get(1)).setText(newValue.getValue().toString());
                 } else if (newValue.getValue().getClass().equals(Question.class)
                         || newValue.getValue().getClass().equals(RomanQuestion.class)) {
@@ -494,6 +547,7 @@ public class MainViewController implements Initializable {
             } else {
                 detailPane.getChildren().set(0, noneDetailPane);
             }
+            treeView.refresh();
             //forceRefresh();
 
 
