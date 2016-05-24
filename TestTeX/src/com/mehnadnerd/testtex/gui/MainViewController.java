@@ -7,10 +7,10 @@ import com.mehnadnerd.testtex.data.choice.RomanChoice;
 import com.mehnadnerd.testtex.data.exam.Exam;
 import com.mehnadnerd.testtex.data.question.Question;
 import com.mehnadnerd.testtex.data.question.RomanQuestion;
-import com.mehnadnerd.testtex.gui.detail.ChoiceDetailController;
-import com.mehnadnerd.testtex.gui.detail.ExamDetailController;
-import com.mehnadnerd.testtex.gui.detail.QuestionDetailController;
-import com.mehnadnerd.testtex.gui.detail.RomanChoiceDetailController;
+import com.mehnadnerd.testtex.data.resource.CodeResource;
+import com.mehnadnerd.testtex.data.resource.ImageResource;
+import com.mehnadnerd.testtex.data.resource.TextResource;
+import com.mehnadnerd.testtex.gui.detail.*;
 import com.mehnadnerd.testtex.util.ListManipulator;
 import com.mehnadnerd.testtex.util.TestTeXConstants;
 import javafx.beans.value.ChangeListener;
@@ -420,12 +420,18 @@ public class MainViewController implements Initializable {
         private ExamDetailController examDetail;
         private QuestionDetailController questionDetail;
         private RomanChoiceDetailController romanChoiceDetail;
+        private CodeResourceController codeResourceDetail;
+        private ImageResourceController imageResourceDetail;
+        private TextResourceController textResourceDetail;
 
         private Pane choiceDetailPane;
         private Pane examDetailPane;
         private Pane questionDetailPane;
         private Pane noneDetailPane;
         private Pane romanChoiceDetailPane;
+        private Pane codeResourceDetailPane;
+        private Pane imageResourceDetailPane;
+        private Pane textResourceDetailPane;
 
         public DetailPaneListener() {
             try {
@@ -470,6 +476,19 @@ public class MainViewController implements Initializable {
                 });
                 fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailNone.fxml"));
                 noneDetailPane = fxmlLoader.load();
+
+                fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailCodeResource.fxml"));
+                codeResourceDetailPane = fxmlLoader.load();
+                codeResourceDetail = fxmlLoader.getController();
+
+                fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailImageResource.fxml"));
+                imageResourceDetailPane = fxmlLoader.load();
+                imageResourceDetail = fxmlLoader.getController();
+                imageResourceDetail.setStage(stage);
+
+                fxmlLoader = new FXMLLoader(MainViewController.class.getResource("detail/detailTextResource.fxml"));
+                textResourceDetailPane = fxmlLoader.load();
+                textResourceDetail = fxmlLoader.getController();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -501,6 +520,21 @@ public class MainViewController implements Initializable {
             treeView.refresh();
         }
 
+        private void codeResourceDetailFromPanel(CodeResource r) {
+            r = codeResourceDetail.writeCodeResource(r);
+            treeView.refresh();
+        }
+
+        private void imageResourceDetailFromPanel(ImageResource r) {
+            r = imageResourceDetail.writeImageResource(r);
+            treeView.refresh();
+        }
+
+        private void textResourceDetailFromPanel(TextResource r) {
+            r = textResourceDetail.writeTextResource(r);
+            treeView.refresh();
+        }
+
         @Override
         public void changed(ObservableValue<? extends TreeItem<Object>> observable, TreeItem<Object> oldValue, TreeItem<Object> newValue) {
             //use old values to record changes
@@ -511,15 +545,22 @@ public class MainViewController implements Initializable {
                     treeView.refresh();
                 } else if (oldValue.getValue().getClass().equals(Exam.class)) {
                     examDetailFromPanel(BackendManager.getExam());
-                    // e.setExamTitle(((TextField) examDetailPane.getChildren().get(1)).getText());
                 } else if (oldValue.getValue().getClass().equals(Question.class)
                         || oldValue.getValue().getClass().equals(RomanQuestion.class)) {
                     Question q = (Question) oldValue.getValue();
                     questionDetailFromPanel(q);
-                    //q.setQuestionText(((TextField) questionDetailPane.getChildren().get(1)).getText());
                 } else if (oldValue.getValue().getClass().equals(RomanChoice.class)) {
                     RomanChoice c = (RomanChoice) oldValue.getValue();
                     romanChoiceDetailFromPanel(c);
+                } else if (oldValue.getValue().getClass().equals(CodeResource.class)) {
+                    CodeResource c = (CodeResource) oldValue.getValue();
+                    codeResourceDetailFromPanel(c);
+                } else if (oldValue.getValue().getClass().equals(ImageResource.class)) {
+                    ImageResource i = (ImageResource) oldValue.getValue();
+                    imageResourceDetailFromPanel(i);
+                } else if (oldValue.getValue().getClass().equals(TextResource.class)) {
+                    TextResource t = (TextResource) oldValue.getValue();
+                    textResourceDetailFromPanel(t);
                 }
             }
             if (newValue != null) {
@@ -541,6 +582,17 @@ public class MainViewController implements Initializable {
                 } else if (newValue.getValue().getClass().equals(RomanChoice.class)) {
                     detailPane.getChildren().set(0, romanChoiceDetailPane);
                     romanChoiceDetail.loadRomanChoice((RomanChoice) newValue.getValue());
+
+                } else if (newValue.getValue().getClass().equals(CodeResource.class)) {
+                    detailPane.getChildren().set(0, codeResourceDetailPane);
+                    codeResourceDetail.loadCodeResource((CodeResource) newValue.getValue());
+                } else if (newValue.getValue().getClass().equals(ImageResource.class)) {
+                    detailPane.getChildren().set(0, imageResourceDetailPane);
+                    imageResourceDetail.loadImageResource((ImageResource) newValue.getValue());
+                } else if (newValue.getValue().getClass().equals(TextResource.class)) {
+                    detailPane.getChildren().set(0, textResourceDetailPane);
+                    textResourceDetail.loadTextResource((TextResource) newValue.getValue());
+
                 } else {
                     detailPane.getChildren().set(0, noneDetailPane);
                 }

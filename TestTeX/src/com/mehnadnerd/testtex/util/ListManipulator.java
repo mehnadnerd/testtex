@@ -22,7 +22,7 @@ public class ListManipulator {
         Random r = new Random();
         int length = l.size();
         for (int i = 0; i < length; i++) {
-            toRet.add(l.remove(r.nextInt() % l.size()));
+            toRet.add(l.remove(Math.abs(r.nextInt()) % l.size()));
         }
         return toRet;
     }

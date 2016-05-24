@@ -111,16 +111,17 @@ public class Exam implements TeXFormatable, DisplayFormatable {
         toRet.append("]{exam}\n");
         toRet.append("\\usepackage{enumerate}\n");
         toRet.append("\\usepackage{listings}\n");
+        toRet.append("\\usepackage{graphicx}\n");
         toRet.append("\\title{").append(examTitle).append("}\n");
         toRet.append("\\date{").append(testDate).append("}\n");
 
         toRet.append("\\pagestyle{headandfoot}\n");
         toRet.append("\\firstpageheader{").append(classTitle).append("}{\\testtitle}{\\testdate}\n");
         toRet.append("\\firstpageheadrule");
-        toRet.append("\\runningheader{").append(classTitle).append("}{\\testtitle \\,Page \\thepage of \\numpages}{\\testdate}\n");
+        toRet.append("\\runningheader{").append(classTitle).append("}{\\testtitle{}\\, Page \\thepage{} of \\numpages}{\\testdate}\n");
         toRet.append("\\runningheadrule\n");
 
-        toRet.append("\\begin {document}\n");
+        toRet.append("\\begin{document}\n");
 
         toRet.append("\\newcommand{\\testtitle} {").append(examTitle).append("}\n");
         toRet.append("\\newcommand{\\testdate} {").append(testDate).append("}\n\n");
